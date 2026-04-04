@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { WebBalanceHeader } from "../components/webBalanceHeader";
 import { WebBottomNav } from "../components/webBottomNav";
 import WebLogin from "./webLogin";
-import { WebLoading } from "../components/webLoading";
+import { WebLoading } from "../components/WebLoading";
 import { Expand, Minimize2, X } from "lucide-react";
 import { WebWalletModal } from "../components/webWalletModal";
 import { WebAccountModal } from "../components/webAccountModal";
@@ -252,7 +252,9 @@ export default function WebHome() {
       </div>
       
       <main className="flex-1 pb-20 md:pb-4">
-        <Outlet context={{ onPlayGame }} />
+        <div key={location.pathname} className="page-transition">
+          <Outlet context={{ onPlayGame }} />
+        </div>
         {gameCheckLoading && (
           <div className="mt-4 mx-4 p-3 bg-[#1a1a1a] border border-[#333] rounded-lg text-sm text-gray-300">
             Checking game availability...

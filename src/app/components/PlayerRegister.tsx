@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Eye, EyeOff, User, Lock, Phone, Gift, CheckCircle } from "lucide-react";
 import { useToast } from "../../components/ToastContainer";
+import { useFormRateLimiter } from "../../utils/useFormRateLimiter";
 
 interface PlayerRegisterProps {
   onSuccess?: (user: any) => void;
@@ -20,6 +21,9 @@ export default function PlayerRegister({ onSuccess, onClose }: PlayerRegisterPro
     confirm_password: "",
   });
   
+  const limiter = useFormRateLimiter({ maxAttempts: 5, lockoutMinutes: 5, cooldownSeconds: 3 });
+  const isSubmitting = isLoading || limiter.isSubmitting;
+
   const toast = useToast();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -62,6 +66,21 @@ export default function PlayerRegister({ onSuccess, onClose }: PlayerRegisterPro
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (limiter.isLocked) {
+      const lockSeconds = Math.ceil(limiter.lockoutRemainingMs / 1000);
+      setError(`Too many attempts. Wait ${lockSeconds} seconds before retrying.`);
+      toast.showError(`Too many attempts. Wait ${lockSeconds} seconds before retrying.`);
+      return;
+    }
+
+    if (limiter.cooldownRemainingMs > 0) {
+      const waitSeconds = Math.ceil(limiter.cooldownRemainingMs / 1000);
+      setError(`Please wait ${waitSeconds} seconds before resubmitting.`);
+      toast.showError(`Please wait ${waitSeconds} seconds before resubmitting.`);
+      return;
+    }
+
     setIsLoading(true);
     setError("");
 
@@ -71,6 +90,7 @@ export default function PlayerRegister({ onSuccess, onClose }: PlayerRegisterPro
       setError(errorMsg);
       toast.showError(errorMsg);
       setIsLoading(false);
+      await limiter.trySubmit(async () => {});
       return;
     }
 
@@ -79,6 +99,7 @@ export default function PlayerRegister({ onSuccess, onClose }: PlayerRegisterPro
       setError(errorMsg);
       toast.showError(errorMsg);
       setIsLoading(false);
+      await limiter.trySubmit(async () => {});
       return;
     }
 
@@ -87,30 +108,33 @@ export default function PlayerRegister({ onSuccess, onClose }: PlayerRegisterPro
       setError(errorMsg);
       toast.showError(errorMsg);
       setIsLoading(false);
+      await limiter.trySubmit(async () => {});
       return;
     }
 
-    console.log('Submitting registration:', {
-      username: formData.username,
-      phone_number: formData.phone_number,
-      hasPassword: !!formData.password,
-      referral_code: referralCode.trim() || undefined
-    });
-
     try {
-      // TODO: Implement registration API when available
-      console.log('📨 Would register player:', formData.username);
-      
-      // Simulate successful registration for now
-      setTimeout(() => {
-        setIsLoading(false);
+      await limiter.trySubmit(async () => {
+        console.log('Submitting registration:', {
+          username: formData.username,
+          phone_number: formData.phone_number,
+          hasPassword: !!formData.password,
+          referral_code: referralCode.trim() || undefined
+        });
+
+        // TODO: Implement registration API when available
+        console.log('📨 Would register player:', formData.username);
+
+        await new Promise<void>((resolve) => setTimeout(resolve, 1000));
+
         toast.showSuccess('Registration successful! Please check your phone for verification.');
         onSuccess?.({ username: formData.username, phone_number: formData.phone_number });
         onClose?.();
-      }, 2000);
+      });
     } catch (error: any) {
-      setIsLoading(false);
+      setError(error.message || 'Registration failed. Please try again.');
       toast.showError(error.message || 'Registration failed. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -253,9 +277,21 @@ export default function PlayerRegister({ onSuccess, onClose }: PlayerRegisterPro
               </div>
             )}
 
+            {limiter.isLocked && (
+              <div className="mb-4 bg-orange-500/20 border border-orange-400 rounded-lg p-3">
+                <p className="text-orange-300 text-sm">Form locked. Please wait {Math.ceil(limiter.lockoutRemainingMs / 1000)} seconds.</p>
+              </div>
+            )}
+
+            {limiter.cooldownRemainingMs > 0 && (
+              <div className="mb-4 bg-yellow-500/20 border border-yellow-400 rounded-lg p-3">
+                <p className="text-yellow-300 text-sm">Please wait {Math.ceil(limiter.cooldownRemainingMs / 1000)} seconds before retrying.</p>
+              </div>
+            )}
+
             <button
               type="submit"
-              disabled={isLoading}
+              disabled={isSubmitting}
               className="w-full bg-[#FFD700] hover:bg-[#FFC700] disabled:bg-gray-600 text-[#121212] font-semibold py-3 rounded-lg transition-colors flex items-center justify-center gap-2"
             >
               {isLoading ? (

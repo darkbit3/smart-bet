@@ -3,6 +3,7 @@ import { Lock, Eye, EyeOff, X } from "lucide-react";
 import { useToast } from "../../components/ToastContainer";
 import { useAuth } from "../../contexts/UserContext";
 import { useNavigate } from "react-router";
+import { useFormRateLimiter } from "../../utils/useFormRateLimiter";
 
 interface LoginProps {
   isOpen: boolean;
@@ -15,7 +16,7 @@ export default function Login({ isOpen, initialMode = "login", onClose, onSucces
   const toast = useToast();
   const { login, register } = useAuth();
   const navigate = useNavigate();
-  const [mode, setMode] = useState<"login" | "register">(initialMode);
+  const [mode, setMode] = useState<"login" | "register" | "register-otp">(initialMode);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -28,14 +29,29 @@ export default function Login({ isOpen, initialMode = "login", onClose, onSucces
   const [isRegisterLocked, setIsRegisterLocked] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  const loginLimiter = useFormRateLimiter({ maxAttempts: 5, lockoutMinutes: 5, cooldownSeconds: 3 });
+  const registerLimiter = useFormRateLimiter({ maxAttempts: 5, lockoutMinutes: 5, cooldownSeconds: 3 });
+
+  const isSubmitting = isLoading || loginLimiter.isSubmitting || registerLimiter.isSubmitting;
+
   const [isResetMode, setIsResetMode] = useState(false);
-  const [resetStep, setResetStep] = useState<'phone' | 'otp' | 'new' | 'done'>('phone');
+  const [resetStep, setResetStep] = useState<'phone' | 'otp' | 'new' | 'done' | 'telegram'>('phone');
   const [resetPhone, setResetPhone] = useState('');
   const [resetOtp, setResetOtp] = useState('');
-  const [sentOtp, setSentOtp] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
   const [resetError, setResetError] = useState('');
+  const [resendTimer, setResendTimer] = useState(0);
+  const [isResending, setIsResending] = useState(false);
+
+  // Registration OTP states
+  const [registerOtp, setRegisterOtp] = useState('');
+  const [registerResendTimer, setRegisterResendTimer] = useState(0);
+  const [isRegisterResending, setIsRegisterResending] = useState(false);
+  const [registerOtpError, setRegisterOtpError] = useState('');
+  const [tempRegisterData, setTempRegisterData] = useState<any>(null);
 
   useEffect(() => {
     setMode(initialMode);
@@ -102,7 +118,6 @@ export default function Login({ isOpen, initialMode = "login", onClose, onSucces
   };
 
   const toInternationalPhone = (digits: string) => {
-    // For 9-digit format, just add +251 prefix
     return "+251" + digits;
   };
 
@@ -118,7 +133,6 @@ export default function Login({ isOpen, initialMode = "login", onClose, onSucces
       return;
     }
     
-    // Real API call for availability check
     const timer = setTimeout(async () => {
       setUsernameStatus("checking");
       try {
@@ -156,13 +170,11 @@ export default function Login({ isOpen, initialMode = "login", onClose, onSucces
     
     const digits = normalizePhoneInput(registerPhone);
     
-    // Check if it's a valid Ethiopian phone number
     if (!isValidLocalPhone(digits)) {
       setPhoneStatus("invalid");
       return;
     }
     
-    // Only check availability if phone number is valid
     if (digits.length === 9) {
       const timer = setTimeout(async () => {
         setPhoneStatus("checking");
@@ -195,11 +207,32 @@ export default function Login({ isOpen, initialMode = "login", onClose, onSucces
     }
   }, [registerPhone, mode]);
 
+  // Resend timer effect
+  useEffect(() => {
+    if (resendTimer > 0) {
+      const timer = setTimeout(() => setResendTimer(resendTimer - 1), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [resendTimer]);
+
+  // Registration resend timer effect
+  useEffect(() => {
+    if (registerResendTimer > 0) {
+      const timer = setTimeout(() => setRegisterResendTimer(registerResendTimer - 1), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [registerResendTimer]);
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (isLoginLocked) {
-      setAuthError("Too many login attempts. Please wait 5 minutes and try again.");
+    if (loginLimiter.isLocked) {
+      setAuthError(`Too many wrong attempts. Try again in ${Math.ceil(loginLimiter.lockoutRemainingMs / 1000)} seconds.`);
+      return;
+    }
+
+    if (loginLimiter.cooldownRemainingMs > 0) {
+      setAuthError(`Wait ${Math.ceil(loginLimiter.cooldownRemainingMs / 1000)}s before submitting again.`);
       return;
     }
 
@@ -222,21 +255,22 @@ export default function Login({ isOpen, initialMode = "login", onClose, onSucces
       } else {
         setAuthError("Password must be at least 6 characters long.");
       }
+      loginLimiter.trySubmit(async () => {});
       return;
     }
 
     setIsLoading(true);
     setAuthError("");
+
     try {
-      const formatted = toInternationalPhone(digits);
-      console.log('Attempting login with:', { phone_number: formatted, hasPassword: !!password });
-      
-      // Use UserContext login method
-      await login(formatted, password);
-      
+      await loginLimiter.trySubmit(async () => {
+        const formatted = toInternationalPhone(digits);
+        console.log('Attempting login with:', { phone_number: formatted, hasPassword: !!password });
+        await login(formatted, password);
+      });
+
       toast.showSuccess('Login successful! Welcome back!', 3000);
-      
-      // Reset login attempts
+
       setLoginAttempts(0);
       setRegisterAttempts(0);
       setIsLoginLocked(false);
@@ -244,9 +278,9 @@ export default function Login({ isOpen, initialMode = "login", onClose, onSucces
       setLockoutExpiry(null);
       setAuthError("");
 
-      onSuccess(formatted); // Pass phone number as username for compatibility
+      onSuccess(toInternationalPhone(digits));
       onClose();
-      navigate("/"); // Navigate to home page after successful login
+      navigate("/");
     } catch (error: any) {
       const next = loginAttempts + 1;
       setLoginAttempts(next);
@@ -265,72 +299,163 @@ export default function Login({ isOpen, initialMode = "login", onClose, onSucces
     }
   };
 
-  const initiateReset = () => {
-    setIsResetMode(true);
-    setResetStep('phone');
-    setResetPhone('');
-    setResetOtp('');
-    setNewPassword('');
-    setConfirmNewPassword('');
-    setResetError('');
-  };
-
-  const sendResetOtp = () => {
+  const sendResetOtp = async () => {
     const digits = normalizePhoneInput(resetPhone);
     if (!isValidLocalPhone(digits)) {
       setResetError("Enter a valid phone for password reset.");
       return;
     }
+    
+    const formattedPhone = resetPhone.startsWith('+') ? resetPhone : `+251${digits}`;
+    
     setResetError('');
-    const code = Math.floor(100000 + Math.random() * 900000).toString();
-    setSentOtp(code);
-    setResetStep('otp');
-    console.log(`Reset OTP for ${digits}: ${code}`); // in production this is sent by SMS API
-    toast.showInfo(`OTP sent to ${digits}`);
+    
+    try {
+      const response = await fetch('http://localhost:3000/api/player-reset-password/request', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          phoneNumber: formattedPhone
+        })
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setResetStep('otp');
+        setResendTimer(60); // Start 60 second countdown
+        toast.showInfo(`OTP sent to ${formattedPhone}`);
+        console.log(`Reset OTP requested for ${formattedPhone}: ${result.data?.resetCode}`);
+      } else {
+        if (result.data?.requiresTelegramRegistration) {
+          setResetError(result.message || 'Phone number not registered with Telegram');
+          setResetStep('telegram');
+          toast.showError('Please register your phone number with Telegram first');
+        } else {
+          setResetError(result.message || 'Failed to send OTP');
+          toast.showError(result.message || 'Failed to send OTP');
+        }
+      }
+    } catch (error) {
+      console.error('Send reset OTP error:', error);
+      setResetError('Failed to send OTP');
+      toast.showError('Failed to send OTP');
+    }
   };
 
-  const verifyResetOtp = () => {
-    if (resetOtp !== sentOtp) {
-      setResetError('Incorrect OTP, please recheck.');
+  const verifyResetOtp = async () => {
+    if (!resetOtp || resetOtp.length !== 6) {
+      setResetError('Please enter a valid 6-digit OTP');
       return;
     }
+    
+    const digits = normalizePhoneInput(resetPhone);
+    const formattedPhone = resetPhone.startsWith('+') ? resetPhone : `+251${digits}`;
+    
     setResetError('');
-    setResetStep('new');
+    
+    try {
+      const response = await fetch('http://localhost:3000/api/player-reset-password/verify', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          phoneNumber: formattedPhone,
+          resetCode: resetOtp
+        })
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setResetStep('new');
+        toast.showSuccess('OTP verified successfully!');
+      } else {
+        setResetError(result.message || 'Invalid OTP');
+        toast.showError(result.message || 'Invalid OTP');
+      }
+    } catch (error) {
+      console.error('Verify OTP error:', error);
+      setResetError('Failed to verify OTP');
+      toast.showError('Failed to verify OTP');
+    }
   };
 
-  const submitNewPassword = () => {
-    if (newPassword.length < 8) {
-      setResetError('Password must be at least 8 characters.');
+  const resendOtp = async () => {
+    setIsResending(true);
+    await sendResetOtp();
+    setIsResending(false);
+  };
+
+  const submitNewPassword = async () => {
+    if (newPassword.length < 6) {
+      setResetError('Password must be at least 6 characters');
       return;
     }
+    
     if (newPassword !== confirmNewPassword) {
       setResetError('Passwords do not match.');
       return;
     }
+    
+    const digits = normalizePhoneInput(resetPhone);
+    const formattedPhone = resetPhone.startsWith('+') ? resetPhone : `+251${digits}`;
+    
     setResetError('');
     
-    // Here you would call an API to update the password
-    toast.showSuccess('Password reset successful!');
-    setIsResetMode(false);
-    setResetStep('done');
-    setAuthError('Password reset successful. Please login.');
-    setMode('login');
-    setPassword('');
-    setResetPhone('');
-    setResetOtp('');
-    setNewPassword('');
-    setConfirmNewPassword('');
+    try {
+      const response = await fetch('http://localhost:3000/api/player-reset-password/reset', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          phoneNumber: formattedPhone,
+          resetCode: resetOtp,
+          newPassword: newPassword
+        })
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        toast.showSuccess('Password reset successful!');
+        setIsResetMode(false);
+        setResetStep('done');
+        setAuthError('Password reset successful. Please login.');
+        setMode('login');
+        setPassword('');
+        setResetPhone('');
+        setResetOtp('');
+        setNewPassword('');
+        setConfirmNewPassword('');
+      } else {
+        setResetError(result.message || 'Failed to reset password');
+        toast.showError(result.message || 'Failed to reset password');
+      }
+    } catch (error) {
+      console.error('Reset password error:', error);
+      setResetError('Failed to reset password');
+      toast.showError('Failed to reset password');
+    }
   };
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (isRegisterLocked) {
-      setAuthError("Too many attempts. Registration temporarily blocked for 5 minutes.");
+    if (registerLimiter.isLocked) {
+      setAuthError(`Too many attempts. Try again in ${Math.ceil(registerLimiter.lockoutRemainingMs / 1000)} seconds.`);
       return;
     }
 
-    // Validate username
+    if (registerLimiter.cooldownRemainingMs > 0) {
+      setAuthError(`Please wait ${Math.ceil(registerLimiter.cooldownRemainingMs / 1000)}s before submitting again.`);
+      return;
+    }
+
     if (!registerUsername.trim()) {
       toast.showError("Username is required");
       return;
@@ -364,9 +489,9 @@ export default function Login({ isOpen, initialMode = "login", onClose, onSucces
     
     setRegisterPhoneError("");
 
-    // Password validation
     if (registerPassword.length < 6) {
       toast.showError("Password must be at least 6 characters");
+      registerLimiter.trySubmit(async () => {});
       return;
     }
 
@@ -382,12 +507,14 @@ export default function Login({ isOpen, initialMode = "login", onClose, onSucces
       } else {
         toast.showError("Passwords do not match!");
       }
+      registerLimiter.trySubmit(async () => {});
       return;
     }
 
     const strength = evaluatePasswordStrength(registerPassword);
     if (strength.text === "Weak") {
       toast.showError("Password is too weak. Please use a stronger password.");
+      registerLimiter.trySubmit(async () => {});
       return;
     }
 
@@ -400,80 +527,152 @@ export default function Login({ isOpen, initialMode = "login", onClose, onSucces
       return;
     }
 
+    const formattedPhone = toInternationalPhone(digits);
+    const registrationData = {
+      username: registerUsername,
+      phone_number: formattedPhone,
+      password: registerPassword,
+      confirm_password: registerConfirmPassword,
+      referral_code: registerReferralCode.trim() || undefined
+    };
+    
     setIsLoading(true);
     setAuthError("");
 
     try {
-      const formatted = toInternationalPhone(digits);
-      console.log('Attempting registration with:', {
-        username: registerUsername,
-        phone_number: formatted,
-        hasPassword: !!registerPassword,
-        referral_code: registerReferralCode.trim() || undefined
+      const response = await fetch('http://localhost:3000/api/registration/request-otp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(registrationData)
       });
-      
-      // Use UserContext register method
-      await register({
-        username: registerUsername,
-        phone_number: formatted,
-        password: registerPassword,
-        confirm_password: registerConfirmPassword,
-        referral_code: registerReferralCode.trim() || undefined
-      });
-      
-      console.log('Registration completed successfully');
-      toast.showSuccess('Registration successful! Welcome to Smart Bet!', 3000);
-      
-      // Reset form and state
-      setLoginAttempts(0);
-      setRegisterAttempts(0);
-      setIsLoginLocked(false);
-      setIsRegisterLocked(false);
-      setLockoutExpiry(null);
-      setAuthError("");
 
-      setPhoneNumber(registerPhone);
-      setRegisterUsername("");
-      setRegisterPhone("");
-      setRegisterPassword("");
-      setRegisterConfirmPassword("");
-      setRegisterReferralCode("");
-      setIsOver18(false);
-      
-      onSuccess(registerUsername);
-      onClose();
-      navigate("/"); // Navigate to home page after successful registration
-    } catch (error: any) {
-      const next = registerAttempts + 1;
-      setRegisterAttempts(next);
-      
-      // Handle specific error messages
-      let errorMessage = "Registration failed. Please try again.";
-      if (error.message) {
-        if (error.message.includes("Username already exists")) {
-          errorMessage = "Username is already taken. Please choose another username.";
-        } else if (error.message.includes("Phone number already exists")) {
-          errorMessage = "Phone number is already registered. Please use another number.";
-        } else if (error.message.includes("weak password")) {
-          errorMessage = "Password is too weak. Please choose a stronger password.";
+      const result = await response.json();
+
+      if (result.success) {
+        setTempRegisterData(registrationData);
+        setMode('register-otp');
+        setRegisterResendTimer(60);
+        toast.showInfo(`Registration code sent to ${formattedPhone}`);
+      } else {
+        if (result.data?.requiresTelegramRegistration) {
+          setTempRegisterData(registrationData);
+          setMode('register-otp');
+          setRegisterResendTimer(60);
+          setRegisterOtpError('Phone number not registered with Telegram. Please register with Telegram first.');
+          toast.showInfo('Please register your phone number with Telegram first using the button below.');
         } else {
-          errorMessage = error.message;
+          setAuthError(result.message || 'Failed to send registration code');
+          toast.showError(result.message || 'Failed to send registration code');
         }
       }
-      
-      if (next >= 5) {
-        const ttl = Date.now() + 5 * 60 * 1000;
-        setIsLoginLocked(true);
-        setIsRegisterLocked(true);
-        setLockoutExpiry(ttl);
-        setAuthError("Account temporarily locked due to repeated failed attempts. Try again in 5 minutes.");
-      } else {
-        setAuthError(errorMessage);
-      }
-      toast.showError(errorMessage);
+    } catch (error) {
+      console.error('Request registration OTP error:', error);
+      setAuthError('Failed to send registration code');
+      toast.showError('Failed to send registration code');
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const sendRegistrationOtp = async () => {
+    if (!tempRegisterData) return;
+    
+    setIsLoading(true);
+    setRegisterOtpError("");
+
+    try {
+      const response = await fetch('http://localhost:3000/api/registration/request-otp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(tempRegisterData)
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setRegisterResendTimer(60);
+        toast.showInfo(`Registration code resent to ${tempRegisterData.phone_number}`);
+      } else {
+        setRegisterOtpError(result.message || 'Failed to resend code');
+        toast.showError(result.message || 'Failed to resend code');
+      }
+    } catch (error) {
+      console.error('Resend registration OTP error:', error);
+      setRegisterOtpError('Failed to resend code');
+      toast.showError('Failed to resend code');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const verifyRegistrationOtp = async () => {
+    if (!registerOtp || registerOtp.length !== 6) {
+      setRegisterOtpError('Please enter a valid 6-digit code');
+      return;
+    }
+    
+    if (!tempRegisterData) {
+      setRegisterOtpError('Registration data not found');
+      return;
+    }
+    
+    setIsLoading(true);
+    setRegisterOtpError("");
+
+    try {
+      const response = await fetch('http://localhost:3000/api/registration/verify-otp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          phoneNumber: tempRegisterData.phone_number,
+          registrationCode: registerOtp
+        })
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        toast.showSuccess('Registration completed successfully!');
+        
+        // Reset all registration states
+        setRegisterUsername("");
+        setRegisterPhone("");
+        setRegisterPassword("");
+        setRegisterConfirmPassword("");
+        setRegisterReferralCode("");
+        setAgreePolicy(false);
+        setIsOver18(false);
+        setRegisterOtp('');
+        setTempRegisterData(null);
+        setRegisterOtpError('');
+        
+        // Switch to login mode
+        setMode('login');
+        setAuthError('Registration successful! Please login.');
+        onSuccess(result.data.username);
+      } else {
+        setRegisterOtpError(result.message || 'Invalid registration code');
+        toast.showError(result.message || 'Invalid registration code');
+      }
+    } catch (error) {
+      console.error('Verify registration OTP error:', error);
+      setRegisterOtpError('Failed to verify code');
+      toast.showError('Failed to verify code');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const resendRegistrationOtp = async () => {
+    setIsRegisterResending(true);
+    await sendRegistrationOtp();
+    setIsRegisterResending(false);
   };
 
   if (!isOpen) {
@@ -490,24 +689,6 @@ export default function Login({ isOpen, initialMode = "login", onClose, onSucces
           </button>
         </div>
 
-        <div className="flex items-center justify-center gap-2 p-4">
-          <button
-            type="button"
-            className={`px-4 py-2 rounded-lg ${mode === "login" ? "bg-[#FFD700] text-[#121212]" : "bg-[#1A1A1A] text-white"}`}
-            onClick={() => setMode("login")}
-          >
-            Login
-          </button>
-          <button
-            type="button"
-            className={`px-4 py-2 rounded-lg ${mode === "register" ? "bg-[#FFD700] text-[#121212]" : "bg-[#1A1A1A] text-white"}`}
-            onClick={() => setMode("register")}
-          >
-            Register
-          </button>
-        </div>
-
-        {/* Error Message */}
         {authError && (
           <div className="mx-4 mb-4 p-3 bg-red-500/20 border border-red-500 rounded-lg relative">
             <p className="text-red-400 text-sm">{authError}</p>
@@ -519,6 +700,30 @@ export default function Login({ isOpen, initialMode = "login", onClose, onSucces
             >
               <X className="w-4 h-4" />
             </button>
+          </div>
+        )}
+
+        {loginLimiter.isLocked && (
+          <div className="mx-4 mb-4 p-3 bg-orange-500/20 border border-orange-400 rounded-lg">
+            <p className="text-orange-300 text-sm">Login locked: wait {Math.ceil(loginLimiter.lockoutRemainingMs / 1000)} seconds.</p>
+          </div>
+        )}
+
+        {loginLimiter.cooldownRemainingMs > 0 && (
+          <div className="mx-4 mb-4 p-3 bg-yellow-500/20 border border-yellow-400 rounded-lg">
+            <p className="text-yellow-300 text-sm">Please wait {Math.ceil(loginLimiter.cooldownRemainingMs / 1000)} seconds before retrying.</p>
+          </div>
+        )}
+
+        {registerLimiter.isLocked && (
+          <div className="mx-4 mb-4 p-3 bg-orange-500/20 border border-orange-400 rounded-lg">
+            <p className="text-orange-300 text-sm">Registration locked: wait {Math.ceil(registerLimiter.lockoutRemainingMs / 1000)} seconds.</p>
+          </div>
+        )}
+
+        {registerLimiter.cooldownRemainingMs > 0 && (
+          <div className="mx-4 mb-4 p-3 bg-yellow-500/20 border border-yellow-400 rounded-lg">
+            <p className="text-yellow-300 text-sm">Please wait {Math.ceil(registerLimiter.cooldownRemainingMs / 1000)} seconds before retrying.</p>
           </div>
         )}
 
@@ -572,25 +777,112 @@ export default function Login({ isOpen, initialMode = "login", onClose, onSucces
                   >
                     Verify OTP
                   </button>
+                  <button
+                    type="button"
+                    onClick={resendOtp}
+                    disabled={resendTimer > 0 || isResending}
+                    className={`w-full mt-2 px-4 py-2 rounded-lg font-semibold transition-colors ${
+                      resendTimer > 0 || isResending
+                        ? "bg-[#2A2A2A] text-gray-500 cursor-not-allowed"
+                        : "bg-[#1A1A1A] text-white hover:bg-[#333333]"
+                    }`}
+                  >
+                    {isResending ? "Sending..." : resendTimer > 0 ? `Resend in ${resendTimer}s` : "Resend Code"}
+                  </button>
+                  <div className="mt-4 pt-4 border-t border-[#2A2A2A]">
+                    <button
+                      type="button"
+                      onClick={() => window.open('https://t.me/Smart_bet_ethiopia_bot', '_blank')}
+                      className="w-full bg-green-500 hover:bg-green-600 text-white px-4 py-3 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
+                    >
+                      <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M9.78 18.65l.28-4.23 7.68 6.92 4.25-7.32L9.78 18.65zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.5-9c.28 0 .5-.22.5-.5s-.22-.5-.5-.5h-6c-.28 0-.5.22-.5.5s.22.5.5.5h6z"/>
+                      </svg>
+                      Go to Telegram Bot
+                    </button>
+                    <p className="text-xs text-gray-400 text-center mt-2">
+                      Bot: @Smart_bet_ethiopia_bot
+                    </p>
+                    <p className="text-xs text-gray-400 text-center mt-1">
+                      Click the button above, then select "Start" and share your phone number
+                    </p>
+                  </div>
+                </>
+              )}
+
+              {resetStep === 'telegram' && (
+                <>
+                  <div className="text-center space-y-4">
+                    <div className="bg-green-500/20 border border-green-500 rounded-lg p-4">
+                      <h4 className="text-green-400 font-semibold mb-2">Phone Number Not Registered</h4>
+                      <p className="text-white text-sm mb-4">
+                        Your phone number is not linked to our Telegram bot. Please follow these steps:
+                      </p>
+                      <ol className="text-white text-sm text-left space-y-2">
+                        <li>1. Click the button below to open Telegram</li>
+                        <li>2. Start the bot: @Smart_bet_ethiopia_bot</li>
+                        <li>3. Click "Share Phone Number" button</li>
+                        <li>4. Return here and try again</li>
+                      </ol>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => window.open('https://t.me/Smart_bet_ethiopia_bot', '_blank')}
+                      className="w-full bg-green-500 hover:bg-green-600 text-white px-4 py-3 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
+                    >
+                      <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M9.78 18.65l.28-4.23 7.68 6.92 4.25-7.32L9.78 18.65zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.5-9c.28 0 .5-.22.5-.5s-.22-.5-.5-.5h-6c-.28 0-.5.22-.5.5s.22.5.5.5h6z"/>
+                      </svg>
+                      Start Bot and Share Phone Number
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setResetStep('phone');
+                        setResetError('');
+                      }}
+                      className="w-full mt-2 bg-[#FFD700] text-[#121212] px-4 py-2 rounded-lg font-semibold"
+                    >
+                      Back to Phone Entry
+                    </button>
+                  </div>
                 </>
               )}
 
               {resetStep === 'new' && (
                 <>
                   <label className="block text-sm font-medium text-gray-400">New Password</label>
-                  <input
-                    type="password"
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                    className="w-full bg-[#1A1A1A] border border-[#2A2A2A] rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-[#FFD700] transition-colors"
-                  />
+                  <div className="relative">
+                    <input
+                      type={showNewPassword ? "text" : "password"}
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      className="w-full bg-[#1A1A1A] border border-[#2A2A2A] rounded-lg px-4 py-3 pr-12 text-white placeholder-gray-500 focus:outline-none focus:border-[#FFD700] transition-colors"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowNewPassword(!showNewPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                    >
+                      {showNewPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                    </button>
+                  </div>
                   <label className="block text-sm font-medium text-gray-400 mt-3">Confirm Password</label>
-                  <input
-                    type="password"
-                    value={confirmNewPassword}
-                    onChange={(e) => setConfirmNewPassword(e.target.value)}
-                    className="w-full bg-[#1A1A1A] border border-[#2A2A2A] rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-[#FFD700] transition-colors"
-                  />
+                  <div className="relative">
+                    <input
+                      type={showConfirmNewPassword ? "text" : "password"}
+                      value={confirmNewPassword}
+                      onChange={(e) => setConfirmNewPassword(e.target.value)}
+                      className="w-full bg-[#1A1A1A] border border-[#2A2A2A] rounded-lg px-4 py-3 pr-12 text-white placeholder-gray-500 focus:outline-none focus:border-[#FFD700] transition-colors"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmNewPassword(!showConfirmNewPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                    >
+                      {showConfirmNewPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                    </button>
+                  </div>
                   <button
                     type="button"
                     onClick={submitNewPassword}
@@ -603,6 +895,94 @@ export default function Login({ isOpen, initialMode = "login", onClose, onSucces
 
               <div className="text-center text-xs text-gray-400">
                 <button type="button" onClick={() => { setIsResetMode(false); setResetStep('phone'); setResetError(''); }} className="underline">Back to login/register</button>
+              </div>
+            </div>
+          ) : mode === "register-otp" ? (
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold text-white">Verify Phone Number</h3>
+              <p className="text-gray-400 text-sm">We need to verify your phone number to complete registration</p>
+              
+              {tempRegisterData && (
+                <div className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-lg p-3">
+                  <p className="text-white text-sm">Phone: {tempRegisterData.phone_number}</p>
+                  <p className="text-white text-sm">Username: {tempRegisterData.username}</p>
+                </div>
+              )}
+              
+              {registerOtpError && <p className="text-red-300 text-sm">{registerOtpError}</p>}
+              
+              <div className="mt-4 pt-4 border-t border-[#2A2A2A]">
+                <button
+                  type="button"
+                  onClick={() => window.open('https://t.me/Smart_bet_ethiopia_bot', '_blank')}
+                  className="w-full bg-green-500 hover:bg-green-600 text-white px-4 py-3 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
+                >
+                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M9.78 18.65l.28-4.23 7.68 6.92 4.25-7.32L9.78 18.65zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.5-9c.28 0 .5-.22.5-.5s-.22-.5-.5-.5h-6c-.28 0-.5.22-.5.5s.22.5.5.5h6z"/>
+                  </svg>
+                  Go to Telegram Bot
+                </button>
+                <p className="text-xs text-gray-400 text-center mt-2">
+                  Bot: @Smart_bet_ethiopia_bot
+                </p>
+                <p className="text-xs text-gray-400 text-center mt-1">
+                  Click the button above, select "Start" and share your phone number
+                </p>
+              </div>
+              
+              <div className="mt-4">
+                <label className="block text-sm font-medium text-gray-400">Enter OTP</label>
+                <input
+                  type="text"
+                  value={registerOtp}
+                  onChange={(e) => setRegisterOtp(e.target.value)}
+                  maxLength={6}
+                  className="w-full bg-[#1A1A1A] border border-[#2A2A2A] rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-[#FFD700] transition-colors"
+                  placeholder="6-digit code from Telegram"
+                />
+                <button
+                  type="button"
+                  onClick={verifyRegistrationOtp}
+                  className="w-full mt-2 bg-[#FFD700] text-[#121212] px-4 py-2 rounded-lg font-semibold"
+                >
+                  Verify & Complete Registration
+                </button>
+                <button
+                  type="button"
+                  onClick={resendRegistrationOtp}
+                  disabled={registerResendTimer > 0 || isRegisterResending || isLoading}
+                  className={`w-full mt-2 px-4 py-2 rounded-lg font-semibold transition-all duration-200 flex items-center justify-center ${
+                    registerResendTimer > 0 || isRegisterResending || isLoading
+                      ? "bg-[#2A2A2A] text-gray-500 cursor-not-allowed opacity-60"
+                      : "bg-[#1A1A1A] text-white hover:bg-[#333333] active:scale-[0.98]"
+                  }`}
+                >
+                  {(isRegisterResending || isLoading) ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-gray-300 border-t-transparent border-r-transparent animate-spin rounded-full mr-2"></div>
+                      Sending...
+                    </>
+                  ) : registerResendTimer > 0 ? (
+                    `Resend in ${registerResendTimer}s`
+                  ) : (
+                    "Resend Code"
+                  )}
+                </button>
+              </div>
+              
+              <div className="text-center text-xs text-gray-400">
+                <button 
+                  type="button" 
+                  onClick={() => { 
+                    setMode('register'); 
+                    setRegisterOtp(''); 
+                    setRegisterOtpError(''); 
+                    setTempRegisterData(null); 
+                  }} 
+                  className="underline"
+                >
+                  Back to registration form
+                </button>
               </div>
             </div>
           ) : mode === "login" ? (
@@ -652,7 +1032,10 @@ export default function Login({ isOpen, initialMode = "login", onClose, onSucces
                 </div>
                 <button
                   type="button"
-                  onClick={initiateReset}
+                  onClick={() => {
+                    setIsResetMode(true);
+                    setResetStep('phone');
+                  }}
                   className="mt-2 text-sm text-[#FFD700] hover:underline"
                 >
                   Forgot password?
@@ -661,9 +1044,9 @@ export default function Login({ isOpen, initialMode = "login", onClose, onSucces
 
               <button
                 type="submit"
-                disabled={!phoneNumber || !password || isLoading}
+                disabled={!phoneNumber || !password || isSubmitting}
                 className={`w-full py-3 rounded-lg font-semibold text-lg transition-all ${
-                  phoneNumber && password && !isLoading
+                  phoneNumber && password && !isSubmitting
                     ? "bg-[#FFD700] text-[#121212] hover:bg-[#FFC700]"
                     : "bg-[#2A2A2A] text-gray-500 cursor-not-allowed"
                 }`}
@@ -792,9 +1175,9 @@ export default function Login({ isOpen, initialMode = "login", onClose, onSucces
 
               <button
                 type="submit"
-                disabled={isLoading}
+                disabled={isSubmitting}
                 className={`w-full py-3 rounded-lg font-semibold text-lg transition-colors ${
-                  isLoading
+                  isSubmitting
                     ? "bg-[#2A2A2A] text-gray-500 cursor-not-allowed"
                     : "bg-[#FFD700] text-[#121212] hover:bg-[#FFC700]"
                 }`}

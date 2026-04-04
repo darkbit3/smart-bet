@@ -32,39 +32,45 @@ export function JackpotTicker() {
   const liveValue = values[sliceIndex];
 
   return (
-    <div className="bg-gradient-to-r from-purple-900/30 to-pink-900/30 border border-purple-500/30 rounded-xl p-8 mb-8 transition-all duration-700 shadow-lg relative overflow-hidden mt-8">
-      <div className="absolute top-0 right-0 w-64 h-64 bg-[#FFD700]/10 rounded-full blur-3xl"></div>
-      <div className="relative z-10">
-        <div className="mb-3">
-          <div className="flex items-center gap-2 mb-2">
-            <div className="flex items-center gap-3">
-              <TrendingUp className="w-7 h-7 text-green-400 animate-pulse" />
-              <Star className="w-7 h-7 text-yellow-300 animate-pulse" />
+    <div className="relative w-full overflow-hidden rounded-xl shadow-xl mb-4 mt-4">
+      <div className="absolute inset-0">
+        <img
+          src={card.image}
+          alt={card.description}
+          className="w-full h-full object-cover opacity-80"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#1F1C44]/80 to-[#231488]/30"></div>
+      </div>
+      <div className="absolute top-0 right-0 w-64 h-64 bg-[#FFD700]/10 rounded-full blur-3xl" />
+      <div className="relative z-10 p-5 md:p-6">
+          <div className="mb-2">
+          <div className="flex items-center gap-2 mb-1 truncate">
+            <div className="flex items-center gap-2">
+              <TrendingUp className="w-5 h-5 text-green-300 animate-pulse" />
+              <Star className="w-5 h-5 text-yellow-300 animate-pulse" />
             </div>
-            <span className="text-[#FFD700] font-semibold text-sm uppercase">Progressive Jackpot</span>
+            <span className="text-[#FFD700] font-semibold text-sm uppercase tracking-wider">Progressive Jackpot</span>
           </div>
         </div>
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <div className="relative w-16 h-16 rounded-xl overflow-hidden bg-[#1f1f1f] border border-purple-500/40">
+            <div className="relative w-14 h-14 rounded-xl overflow-hidden bg-[#1f1f1f] border border-purple-500/40">
               <img src={card.image} alt={card.description} className="w-full h-full object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
             </div>
             <div>
-              <div className="text-xl font-semibold text-white mb-0.5">{card.description}</div>
-              <div className="text-2xl font-bold text-white tracking-wider">
-                {card.currency}{liveValue.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-              </div>
+              <div className="text-lg font-semibold text-white leading-tight">{card.description}</div>
+              <div className="text-2xl md:text-3xl font-bold text-white tracking-wider">{card.currency}{liveValue.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</div>
             </div>
           </div>
-          <div className="flex items-center gap-3">
-            <TrendingUp className="w-7 h-7 text-green-400 animate-pulse" />
-            <Star className="w-7 h-7 text-yellow-300 animate-pulse" />
+          <div className="flex items-center gap-2">
+            <TrendingUp className="w-6 h-6 text-green-300 animate-pulse" />
+            <Star className="w-6 h-6 text-yellow-300 animate-pulse" />
           </div>
         </div>
-        <div className="mt-3 flex justify-center gap-2">
+        <div className="mt-3 flex justify-center gap-1">
           {jackpots.map((_, idx) => (
-            <span key={idx} className={`h-2 w-8 rounded-full ${idx === sliceIndex ? "bg-[#FFD700]" : "bg-purple-500/40"}`}></span>
+            <span key={idx} className={`h-2 w-6 rounded-full transition-colors ${idx === sliceIndex ? "bg-[#FFD700]" : "bg-purple-500/40"}`}></span>
           ))}
         </div>
       </div>

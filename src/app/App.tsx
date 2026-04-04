@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { RouterProvider } from "react-router";
 import { router } from "./routes";
-import { Loading } from "./components/Loading";
+import { PageLoading } from "../components/Loading";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { AuthProvider } from "../contexts/UserContext";
 import { BalanceProvider } from "../contexts/BalanceContext";
@@ -13,7 +13,7 @@ export default function App() {
       <ToastProvider>
         <AuthProvider>
           <BalanceProvider>
-            <Suspense fallback={<Loading />}>
+            <Suspense fallback={<PageLoading text="Initializing app..." />}>
               <RouterProvider router={router} />
             </Suspense>
           </BalanceProvider>

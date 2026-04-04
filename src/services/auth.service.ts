@@ -115,6 +115,24 @@ const makeRequest = async (config: any) => {
   }
 };
 
+// Add request interceptor to attach tokens for authenticated requests
+apiClient.interceptors.request.use(
+  (config) => {
+    try {
+      const tokens = authAPI.getTokens();
+      const accessToken = tokens?.accessToken || tokens?.token;
+      if (accessToken && config.headers) {
+        (config.headers as any).Authorization = `Bearer ${accessToken}`;
+      }
+    } catch (err) {
+      // ignore token parsing errors
+    }
+
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
 // Add response interceptor for better error handling
 apiClient.interceptors.response.use(
   (response) => response,
@@ -285,6 +303,35 @@ export const authAPI = {
     } catch (error: any) {
       console.error('❌ Frontend Auth API - Referral validation error:', error);
       throw error;
+    }
+  },
+
+  // Get current authenticated user from the API using stored token
+  getCurrentUser: async () => {
+    const accessToken = authAPI.getAccessToken();
+    if (!accessToken) {
+      throw new Error('No access token available');
+    }
+
+    try {
+      const response = await apiClient.get('/user/test-token', {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      });
+      return response.data;
+    } catch (error: any) {
+      // On failure, remove invalid tokens
+      authAPI.removeTokens();
+      throw error;
+    }
+  },
+
+  setAuthorizationHeader: (accessToken: string | null) => {
+    if (accessToken) {
+      apiClient.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
+    } else {
+      delete apiClient.defaults.headers.common['Authorization'];
     }
   },
 

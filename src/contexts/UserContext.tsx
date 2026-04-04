@@ -125,13 +125,52 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return 'database_error';
   };
 
-  // Check for existing tokens on mount
+  // Check for existing tokens on mount and rehydrate auth state
   useEffect(() => {
-    const tokens = authAPI.getTokens();
-    if (tokens) {
-      // TODO: Validate token and get user data
-      console.log(' AuthProvider - Found existing tokens:', tokens.accessToken ? 'Yes' : 'No');
-    }
+    const tryRestoreSession = async () => {
+      const tokens = authAPI.getTokens();
+      if (!tokens?.accessToken && !tokens?.token) {
+        return;
+      }
+
+      const accessToken = tokens.accessToken || tokens.token;
+      authAPI.setAuthorizationHeader(accessToken);
+
+      dispatch({ type: 'SET_LOADING', payload: true });
+
+      try {
+        const currentUserResponse = await authAPI.getCurrentUser();
+        const userData = currentUserResponse.user || currentUserResponse.data?.user;
+
+        if (!userData) {
+          throw new Error('Failed to retrieve authenticated user data');
+        }
+
+        const user: User = {
+          id: userData.id,
+          username: userData.username || '',
+          phone_number: userData.phone_number || '',
+          balance: userData.balance ?? 0,
+          non_withdrawable: userData.non_withdrawable ?? 0,
+          bonus_balance: userData.bonus_balance ?? 0,
+          withdrawable: userData.withdrawable ?? 0,
+          status: userData.status || 'active',
+          created_at: userData.created_at || new Date().toISOString(),
+          updated_at: userData.updated_at || new Date().toISOString(),
+        };
+
+        dispatch({ type: 'LOGIN_SUCCESS', payload: { user, tokens } });
+      } catch (error: any) {
+        console.warn('🔐 AuthProvider - Session restore failed:', error?.message || error);
+        authAPI.removeTokens();
+        authAPI.setAuthorizationHeader(null);
+        dispatch({ type: 'LOGOUT' });
+      } finally {
+        dispatch({ type: 'SET_LOADING', payload: false });
+      }
+    };
+
+    tryRestoreSession();
   }, []);
 
   const login = async (phone_number: string, password: string) => {
@@ -152,6 +191,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // Store tokens
         if (tokens) {
           authAPI.storeTokens(tokens);
+          const accessToken = tokens.accessToken || tokens.token;
+          authAPI.setAuthorizationHeader(accessToken);
         }
         
         dispatch({
@@ -184,6 +225,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
     
     authAPI.removeTokens();
+    authAPI.setAuthorizationHeader(null);
     dispatch({ type: 'LOGOUT' });
     console.log('🔐 AuthProvider - Logout successful');
   };

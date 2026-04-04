@@ -21,7 +21,7 @@ export function BottomNav() {
 
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-[#1A1A1A] border-t border-[#2A2A2A] px-2 py-2 safe-area-bottom z-50 md:hidden">
-      <div className="max-w-7xl mx-auto flex items-center justify-around">
+      <div className="horizontal-scroll flex items-center justify-start gap-1">
         {navItems.map((item) => {
           const Icon = item.icon;
           const active = isActive(item.path);

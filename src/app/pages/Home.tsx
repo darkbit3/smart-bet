@@ -249,11 +249,12 @@ export default function Home() {
         onClose={() => setSettingsModalOpen(false)}
       />
 
-      <div className="px-4 md:px-8 pt-4">
-      </div>
+      <div className="full-viewport pt-4" />
       
-      <main className="flex-1 pb-20 md:pb-4">
-        <Outlet context={{ onPlayGame }} />
+      <main className="full-viewport flex-1 pb-20 md:pb-4">
+        <div key={location.pathname} className="page-transition">
+          <Outlet context={{ onPlayGame }} />
+        </div>
         {gameCheckLoading && (
           <div className="mt-4 mx-4 p-3 bg-[#1a1a1a] border border-[#333] rounded-lg text-sm text-gray-300">
             Checking game availability...

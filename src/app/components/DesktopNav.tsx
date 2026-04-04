@@ -20,7 +20,7 @@ export function DesktopNav() {
   };
 
   return (
-    <div className="hidden md:flex items-center gap-1 bg-[#1A1A1A] rounded-lg p-1 border border-[#2A2A2A]">
+    <div className="hidden md:flex horizontal-scroll items-center gap-1 bg-[#1A1A1A] rounded-lg p-1 border border-[#2A2A2A]" style={{ padding: '0.25rem' }}>
       {navItems.map((item) => {
         const Icon = item.icon;
         const active = isActive(item.path);

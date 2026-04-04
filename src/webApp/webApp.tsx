@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { RouterProvider } from "react-router";
 import { router } from "./webRoutes";
-import { WebLoading } from "./components/webLoading";
+import { WebLoading } from "./components/WebLoading";
 import { WebErrorBoundary } from "./components/webErrorBoundary";
 import { WebAuthProvider } from "../contexts/webUserContext";
 import { WebToastProvider } from "../components/webToastContainer";

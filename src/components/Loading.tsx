@@ -24,32 +24,47 @@ const colorClasses = {
   white: 'border-t-white'
 };
 
+const colorValues = {
+  primary: '#FFD700',
+  secondary: '#FF6B35',
+  accent: '#00D4FF',
+  white: '#FFFFFF'
+};
+
 const Spinner: React.FC<{ size: string; color: string }> = ({ size, color }) => (
   <div className={`${size} rounded-full border-4 border-r-transparent border-b-transparent border-l-transparent animate-spin ${color}`} />
 );
 
 const Dots: React.FC<{ size: string; color: string }> = ({ size, color }) => (
   <div className="flex space-x-1">
-    <div className={`${size.replace('h-', 'h-').replace('w-', 'w-')} bg-[#FFD700] rounded-full animate-bounce`} style={{ animationDelay: '0ms' }} />
-    <div className={`${size.replace('h-', 'h-').replace('w-', 'w-')} bg-[#FFD700] rounded-full animate-bounce`} style={{ animationDelay: '150ms' }} />
-    <div className={`${size.replace('h-', 'h-').replace('w-', 'w-')} bg-[#FFD700] rounded-full animate-bounce`} style={{ animationDelay: '300ms' }} />
+    {[0, 1, 2].map((i) => (
+      <div
+        key={i}
+        className={`${size.replace('h-', 'h-').replace('w-', 'w-')} rounded-full animate-bounce`}
+        style={{
+          backgroundColor: color,
+          animationDelay: `${i * 150}ms`
+        }}
+      />
+    ))}
   </div>
 );
 
 const Pulse: React.FC<{ size: string; color: string }> = ({ size, color }) => (
-  <div className={`${size} bg-[#FFD700] rounded-full animate-pulse`} />
+  <div className={`${size} rounded-full animate-pulse`} style={{ backgroundColor: color }} />
 );
 
 const Bars: React.FC<{ size: string; color: string }> = ({ size, color }) => (
-  <div className="flex space-x-1">
+  <div className="flex space-x-1 items-end h-10">
     {[0, 1, 2, 3, 4].map((i) => (
       <div
         key={i}
-        className="w-1 bg-[#FFD700] animate-pulse"
+        className="w-1 rounded"
         style={{
-          height: `${20 + i * 4}px`,
-          animationDelay: `${i * 100}ms`,
-          animationDuration: '1s'
+          backgroundColor: color,
+          height: `${20 + i * 6}px`,
+          animation: 'barPulse 1.2s ease-in-out infinite',
+          animationDelay: `${i * 0.1}s`
         }}
       />
     ))}
@@ -58,15 +73,15 @@ const Bars: React.FC<{ size: string; color: string }> = ({ size, color }) => (
 
 const Ring: React.FC<{ size: string; color: string }> = ({ size, color }) => (
   <div className="relative">
-    <div className={`${size} rounded-full border-4 border-[#FFD700]/20`} />
-    <div className={`${size} rounded-full border-4 border-transparent border-t-[#FFD700] animate-spin absolute top-0`} />
+    <div className={`${size} rounded-full`} style={{ borderWidth: 4, borderStyle: 'solid', borderColor: `${color}33` }} />
+    <div className={`${size} rounded-full absolute top-0`} style={{ borderWidth: 4, borderStyle: 'solid', borderColor: 'transparent', borderTopColor: color, animation: 'spin 1s linear infinite' }} />
   </div>
 );
 
 const DualRing: React.FC<{ size: string; color: string }> = ({ size, color }) => (
   <div className="relative">
-    <div className={`${size} rounded-full border-4 border-[#FFD700]/20 animate-spin`} />
-    <div className={`${size.replace('h-', 'h-').replace('w-', 'w-')} rounded-full border-4 border-transparent border-t-[#FFD700] animate-spin absolute top-0`} style={{ animationDirection: 'reverse', animationDuration: '1.5s' }} />
+    <div className={`${size} rounded-full`} style={{ borderWidth: 4, borderStyle: 'solid', borderColor: `${color}33`, animation: 'spin 1s linear infinite' }} />
+    <div className={`${size} rounded-full absolute top-0`} style={{ borderWidth: 4, borderStyle: 'solid', borderColor: 'transparent', borderTopColor: color, animation: 'spinReverse 1.5s linear infinite' }} />
   </div>
 );
 
@@ -81,20 +96,20 @@ export const Loading: React.FC<LoadingProps> = ({
 }) => {
   const sizeClass = sizeClasses[size];
   const colorClass = colorClasses[color];
+  const colorValue = colorValues[color];
 
   const renderLoader = () => {
     switch (variant) {
       case 'dots':
-        return <Dots size={sizeClass} color={colorClass} />;
+        return <Dots size={sizeClass} color={colorValue} />;
       case 'pulse':
-        return <Pulse size={sizeClass} color={colorClass} />;
+        return <Pulse size={sizeClass} color={colorValue} />;
       case 'bars':
-        return <Bars size={sizeClass} color={colorClass} />;
+        return <Bars size={sizeClass} color={colorValue} />;
       case 'ring':
-        return <Ring size={sizeClass} color={colorClass} />;
+        return <Ring size={sizeClass} color={colorValue} />;
       case 'dual-ring':
-        return <DualRing size={sizeClass} color={colorClass} />;
-      default:
+        return <DualRing size={sizeClass} color={colorValue} />;
         return <Spinner size={sizeClass} color={colorClass} />;
     }
   };

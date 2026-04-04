@@ -91,7 +91,7 @@ export default function Casino() {
   }, [activeTab, searchQuery]);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-6">
+    <div className="max-w-7xl mx-auto px-3 py-4">
       {/* Hero Carousel - Progressive Jackpot & Hot This Week */}
       <HeroCarousel />
 
@@ -110,8 +110,8 @@ export default function Casino() {
       </div>
 
       {/* Category Tabs */}
-      <div className="mb-6 overflow-x-auto scrollbar-hide">
-        <div className="flex gap-2 min-w-max">
+      <div className="mb-4 overflow-x-auto scrollbar-hide">
+        <div className="flex gap-1 min-w-max">
           {categories.map((category) => {
             const Icon = category.icon;
             return (
@@ -135,7 +135,7 @@ export default function Casino() {
       {/* Games Grid */}
       <div className="mb-6">
         <h2 className="text-xl font-bold text-white mb-4">All Games</h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
           {filteredGames.slice(0, visibleCount).map((game, index) => (
             <GameTile
               key={index}
