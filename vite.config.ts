@@ -12,7 +12,7 @@ export default defineConfig({
   ],
   server: {
     host: '0.0.0.0',
-    port: 5173,
+    port: 3000,
     strictPort: false,
     watch: {
       usePolling: true,
@@ -20,10 +20,10 @@ export default defineConfig({
     hmr: {
       protocol: 'ws',
       host: 'localhost',
-      clientPort: 5173,
+      clientPort: 3000,
       // If running through container/VM binding, optionally use:
       // host: process.env.HMR_HOST || 'localhost',
-      // clientPort: Number(process.env.HMR_CLIENT_PORT || 5173),
+      // clientPort: Number(process.env.HMR_CLIENT_PORT || 3000),
     },
   },
 
