@@ -14,6 +14,7 @@ export default defineConfig({
     host: '0.0.0.0',
     port: 5174,
     strictPort: false,
+    allowedHosts: ['smart-bet-owof.onrender.com'],
     watch: {
       usePolling: true,
     },
@@ -22,6 +23,9 @@ export default defineConfig({
       host: 'localhost',
       port: 5174,
     },
+  },
+  preview: {
+    allowedHosts: ['smart-bet-owof.onrender.com'],
   },
 
   resolve: {
