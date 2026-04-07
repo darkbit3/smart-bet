@@ -140,6 +140,56 @@ export function WalletModal({ isOpen, onClose, phoneNumber }: WalletModalProps) 
             )}
           </div>
 
+          {/* Bingo Game Section */}
+          <div className="p-4 bg-gradient-to-r from-[#FFD700]/10 to-[#FFA500]/10 border-b border-[#2A2A2A]">
+            <div className="flex items-center gap-4">
+              <div className="relative w-20 h-20 rounded-lg overflow-hidden flex-shrink-0">
+                <img
+                  src="https://images.unsplash.com/photo-1517248135467-39c9704e5cf5?auto=format&fit=crop&w=400&q=80"
+                  alt="Bingo Game"
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                  <span className="text-white text-xs font-bold">BINGO</span>
+                </div>
+              </div>
+              <div className="flex-1">
+                <h3 className="text-lg font-bold text-white mb-1">Play Bingo Now!</h3>
+                <p className="text-sm text-gray-400 mb-3">Experience the excitement of Bingo with Smart Bet Gaming</p>
+                <button
+                  onClick={() => {
+                    // Show confirmation panel before navigating
+                    const confirmed = window.confirm(
+                      'Do you want to play Bingo with your Smart Bet account?\n\n' +
+                      'Click OK to play with your balance and player ID displayed.\n' +
+                      'Click Cancel to play without Smart Bet integration.'
+                    );
+                    
+                    if (confirmed) {
+                      // Store navigation flag for cashier integration
+                      sessionStorage.setItem('fromCashier', 'true');
+                      sessionStorage.setItem('showPlayerData', 'true');
+                      // Open Bingo Front in the same window
+                      window.location.href = 'http://localhost:5173';
+                    } else {
+                      // Store navigation flag for normal play
+                      sessionStorage.setItem('fromCashier', 'false');
+                      sessionStorage.setItem('showPlayerData', 'false');
+                      // Open Bingo Front in the same window
+                      window.location.href = 'http://localhost:5173';
+                    }
+                  }}
+                  className="bg-[#FFD700] hover:bg-[#FFC700] text-[#121212] px-4 py-2 rounded-lg font-semibold text-sm transition-colors flex items-center gap-2"
+                >
+                  Play Now
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
           {/* Tabs */}
           <div className="flex border-b border-[#2A2A2A]">
             {tabs.map((tab) => {

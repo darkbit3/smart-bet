@@ -209,7 +209,7 @@ export function useWalletPaymentMethodHandlers({
       });
       
       // Call the real cashout agent API
-      const response = await fetch('http://localhost:3000/api/cashout-agent/request', {
+      const response = await fetch('https://smart-bet-backend-7wntmhyi0-kaleabs-projects-1bd541ea.vercel.app/api/cashout-agent/request', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

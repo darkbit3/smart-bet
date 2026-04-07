@@ -137,7 +137,7 @@ export default function Login({ isOpen, initialMode = "login", onClose, onSucces
       setUsernameStatus("checking");
       try {
         console.log('🔍 Login Modal - Checking username availability:', registerUsername.trim());
-        const response = await fetch(`http://localhost:3000/api/availability/username/${encodeURIComponent(registerUsername.trim())}`);
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api'}/availability/username/${encodeURIComponent(registerUsername.trim())}`);
         const data = await response.json();
         console.log('🔍 Login Modal - Username check response:', data);
         
@@ -181,7 +181,7 @@ export default function Login({ isOpen, initialMode = "login", onClose, onSucces
         try {
           const internationalPhone = toInternationalPhone(digits);
           console.log('🔍 Login Modal - Checking phone availability:', internationalPhone);
-          const response = await fetch(`http://localhost:3000/api/availability/phone/${encodeURIComponent(internationalPhone)}`);
+          const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api'}/availability/phone/${encodeURIComponent(internationalPhone)}`);
           const data = await response.json();
           console.log('🔍 Login Modal - Phone check response:', data);
           
@@ -311,7 +311,7 @@ export default function Login({ isOpen, initialMode = "login", onClose, onSucces
     setResetError('');
     
     try {
-      const response = await fetch('http://localhost:3000/api/player-reset-password/request', {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api'}/player-reset-password/request`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -357,7 +357,7 @@ export default function Login({ isOpen, initialMode = "login", onClose, onSucces
     setResetError('');
     
     try {
-      const response = await fetch('http://localhost:3000/api/player-reset-password/verify', {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api'}/player-reset-password/verify`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -407,7 +407,7 @@ export default function Login({ isOpen, initialMode = "login", onClose, onSucces
     setResetError('');
     
     try {
-      const response = await fetch('http://localhost:3000/api/player-reset-password/reset', {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api'}/player-reset-password/reset`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -540,7 +540,7 @@ export default function Login({ isOpen, initialMode = "login", onClose, onSucces
     setAuthError("");
 
     try {
-      const response = await fetch('http://localhost:3000/api/registration/request-otp', {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api'}/registration/request-otp`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -583,7 +583,7 @@ export default function Login({ isOpen, initialMode = "login", onClose, onSucces
     setRegisterOtpError("");
 
     try {
-      const response = await fetch('http://localhost:3000/api/registration/request-otp', {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api'}/registration/request-otp`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -624,7 +624,7 @@ export default function Login({ isOpen, initialMode = "login", onClose, onSucces
     setRegisterOtpError("");
 
     try {
-      const response = await fetch('http://localhost:3000/api/registration/verify-otp', {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api'}/registration/verify-otp`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

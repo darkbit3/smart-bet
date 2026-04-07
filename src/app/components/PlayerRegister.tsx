@@ -40,7 +40,7 @@ export default function PlayerRegister({ onSuccess, onClose }: PlayerRegisterPro
     if (code) {
       try {
         // Check referral code validity (without using it yet)
-        const response = await fetch(`http://localhost:3000/api/player/referral-check?code=${code}`);
+        const response = await fetch(`https://smart-bet-backend-7wntmhyi0-kaleabs-projects-1bd541ea.vercel.app/api/player/referral-check?code=${code}`);
         const data = await response.json();
         
         if (data.success) {

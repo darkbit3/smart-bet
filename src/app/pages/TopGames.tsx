@@ -3,18 +3,19 @@ import { GameTile } from "../components/GameTile";
 
 export default function TopGames() {
   const topGames = [
-    { id: 1, name: "Mega Fortune", image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400&h=300&fit=crop", jackpot: "$2.4M", category: "Jackpot" },
-    { id: 2, name: "Starburst", image: "https://images.unsplash.com/photo-1601933973783-43cf8a7d4c5f?w=400&h=300&fit=crop", jackpot: null, category: "Slots" },
-    { id: 3, name: "Book of Dead", image: "https://images.unsplash.com/photo-1606167668584-78701c57f13d?w=400&h=300&fit=crop", jackpot: null, category: "Adventure" },
-    { id: 4, name: "Lightning Roulette", image: "https://images.unsplash.com/photo-1596838132731-3301c3fd4317?w=400&h=300&fit=crop", jackpot: null, category: "Live Casino" },
-    { id: 5, name: "Gonzo's Quest", image: "https://images.unsplash.com/photo-1550068274-e54993d0f0f7?w=400&h=300&fit=crop", jackpot: null, category: "Adventure" },
-    { id: 6, name: "Divine Fortune", image: "https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=400&h=300&fit=crop", jackpot: "$1.8M", category: "Jackpot" },
-    { id: 7, name: "Blackjack VIP", image: "https://images.unsplash.com/photo-1571988840298-3b5301d5109b?w=400&h=300&fit=crop", jackpot: null, category: "Table Games" },
-    { id: 8, name: "Fire Joker", image: "https://images.unsplash.com/photo-1566738780863-f9608f88f3a9?w=400&h=300&fit=crop", jackpot: null, category: "Classic Slots" },
-    { id: 9, name: "Live Baccarat", image: "https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?w=400&h=300&fit=crop", jackpot: null, category: "Live Casino" },
-    { id: 10, name: "Immortal Romance", image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400&h=300&fit=crop", jackpot: null, category: "Slots" },
-    { id: 11, name: "Arabian Nights", image: "https://images.unsplash.com/photo-1570116880826-1fe961e8b3ed?w=400&h=300&fit=crop", jackpot: "$3.1M", category: "Jackpot" },
-    { id: 12, name: "Crazy Time", image: "https://images.unsplash.com/photo-1551191164-a98cc4c57707?w=400&h=300&fit=crop", jackpot: null, category: "Game Shows" },
+    { id: 1, name: "Bingo", image: "https://images.unsplash.com/photo-1517248135467-39c9704e5cf5?auto=format&fit=crop&w=400&q=80", jackpot: null, category: "Featured" },
+    { id: 2, name: "Mega Fortune", image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400&h=300&fit=crop", jackpot: "$2.4M", category: "Jackpot" },
+    { id: 3, name: "Starburst", image: "https://images.unsplash.com/photo-1601933973783-43cf8a7d4c5f?w=400&h=300&fit=crop", jackpot: null, category: "Slots" },
+    { id: 4, name: "Book of Dead", image: "https://images.unsplash.com/photo-1606167668584-78701c57f13d?w=400&h=300&fit=crop", jackpot: null, category: "Adventure" },
+    { id: 5, name: "Lightning Roulette", image: "https://images.unsplash.com/photo-1596838132731-3301c3fd4317?w=400&h=300&fit=crop", jackpot: null, category: "Live Casino" },
+    { id: 6, name: "Gonzo's Quest", image: "https://images.unsplash.com/photo-1550068274-e54993d0f0f7?w=400&h=300&fit=crop", jackpot: null, category: "Adventure" },
+    { id: 7, name: "Divine Fortune", image: "https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=400&h=300&fit=crop", jackpot: "$1.8M", category: "Jackpot" },
+    { id: 8, name: "Blackjack VIP", image: "https://images.unsplash.com/photo-1571988840298-3b5301d5109b?w=400&h=300&fit=crop", jackpot: null, category: "Table Games" },
+    { id: 9, name: "Fire Joker", image: "https://images.unsplash.com/photo-1566738780863-f9608f88f3a9?w=400&h=300&fit=crop", jackpot: null, category: "Classic Slots" },
+    { id: 10, name: "Live Baccarat", image: "https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?w=400&h=300&fit=crop", jackpot: null, category: "Live Casino" },
+    { id: 11, name: "Immortal Romance", image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400&h=300&fit=crop", jackpot: null, category: "Slots" },
+    { id: 12, name: "Arabian Nights", image: "https://images.unsplash.com/photo-1570116880826-1fe961e8b3ed?w=400&h=300&fit=crop", jackpot: "$3.1M", category: "Jackpot" },
+    { id: 13, name: "Crazy Time", image: "https://images.unsplash.com/photo-1551191164-a98cc4c57707?w=400&h=300&fit=crop", jackpot: null, category: "Game Shows" },
   ];
 
   const categories = [
@@ -80,15 +81,85 @@ export default function TopGames() {
           Top Rated Games
         </h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3 mb-6">
-          {topGames.map((game) => (
-            <GameTile
-              key={game.id}
-              name={game.name}
-              image={game.image}
-              jackpot={game.jackpot || undefined}
-              category={game.category}
-            />
-          ))}
+          {topGames.map((game) => {
+            // Special handling for Bingo game
+            if (game.name === "Bingo") {
+              return (
+                <div key={game.id} className="group relative bg-[#1A1A1A] rounded-xl overflow-hidden border border-[#2A2A2A] hover:border-[#FFD700] transition-all cursor-pointer">
+                  {/* Bingo Game Image */}
+                  <div className="relative aspect-[4/3] overflow-hidden bg-[#0A0A0A]">
+                    <img
+                      src={game.image}
+                      alt={game.name}
+                      className="w-full h-full object-cover transition-transform group-hover:scale-110"
+                    />
+                    
+                    {/* Overlay on Hover */}
+                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          // Show confirmation panel before navigating
+                          const confirmed = window.confirm(
+                            'Do you want to play Bingo with your Smart Bet account?\n\n' +
+                            'Click OK to play with your balance and player ID displayed.\n' +
+                            'Click Cancel to play without Smart Bet integration.'
+                          );
+                          
+                          if (confirmed) {
+                            // Store navigation flag for cashier integration
+                            sessionStorage.setItem('fromCashier', 'true');
+                            sessionStorage.setItem('showPlayerData', 'true');
+                            // Open Bingo Front in the same window
+                            window.location.href = 'http://localhost:5173';
+                          } else {
+                            // Store navigation flag for normal play
+                            sessionStorage.setItem('fromCashier', 'false');
+                            sessionStorage.setItem('showPlayerData', 'false');
+                            // Open Bingo Front in the same window
+                            window.location.href = 'http://localhost:5173';
+                          }
+                        }}
+                        className="bg-[#FFD700] text-[#121212] px-6 py-3 rounded-lg font-semibold flex items-center gap-2 hover:bg-[#FFC700] transition-colors"
+                      >
+                        Play Now
+                      </button>
+                    </div>
+                  </div>
+                  
+                  {/* Game Info */}
+                  <div className="p-3">
+                    <div className="flex items-start justify-between mb-2">
+                      <div className="flex-1">
+                        <h3 className="text-white font-semibold text-sm mb-1">{game.name}</h3>
+                        <p className="text-gray-400 text-xs">Smart Bet Gaming</p>
+                      </div>
+                      <div className="flex gap-1">
+                        <span className="bg-[#FFD700]/20 text-[#FFD700] text-xs px-2 py-1 rounded-full font-semibold">
+                          Featured
+                        </span>
+                        <span className="bg-green-500/20 text-green-400 text-xs px-2 py-1 rounded-full font-semibold">
+                          NEW
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            }
+            
+            // Regular game tile for other games
+            return (
+              <GameTile
+                key={game.id}
+                title={game.name}
+                provider="Smart Bet Gaming"
+                imageUrl={game.image}
+                isFeatured={game.category === "Featured"}
+                isNew={game.category === "Featured"}
+              />
+            );
+          })}
         </div>
       </div>
     </div>

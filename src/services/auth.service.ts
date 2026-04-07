@@ -1,25 +1,11 @@
 import axios from 'axios';
 
-// API Configuration with encrypted URL
-const DEFAULT_ENCRYPTED_URL = 'aHR0cDovL2xvY2FsaG9zdDozMDAwL2FwaA=='; // Base64 encoded "http://localhost:3000/api"
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || DEFAULT_ENCRYPTED_URL;
-
-// Simple Base64 decoding function
-const decodeBase64 = (str: string) => {
-  try {
-    return atob(str);
-  } catch (error) {
-    // If decoding fails, assume it's already a plain URL
-    return str;
-  }
-};
-
-// Decode the API URL (only if it's encrypted)
-const DECODED_API_URL = API_BASE_URL === DEFAULT_ENCRYPTED_URL ? decodeBase64(API_BASE_URL) : API_BASE_URL;
+// API Configuration
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
 
 // Create axios instance
 const apiClient = axios.create({
-  baseURL: DECODED_API_URL,
+  baseURL: API_BASE_URL,
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
@@ -39,9 +25,9 @@ const filterConsoleOutput = (...args: any[]) => {
   // Block any console output related to authentication, axios, or the app
   if (messageStr.includes('401') || 
       messageStr.includes('Unauthorized') || 
-      messageStr.includes('POST http://localhost:3000/api/login') ||
-      messageStr.includes('http://localhost:3000/api') ||
-      messageStr.includes('localhost:3000') ||
+      messageStr.includes('POST https://smart-bet-backend-7wntmhyi0-kaleabs-projects-1bd541ea.vercel.app/api/login') ||
+      messageStr.includes('https://smart-bet-backend-7wntmhyi0-kaleabs-projects-1bd541ea.vercel.app/api') ||
+      messageStr.includes('smart-bet-backend-7wntmhyi0-kaleabs-projects-1bd541ea.vercel.app') ||
       messageStr.includes('dispatchXhrRequest') ||
       messageStr.includes('xhr') ||
       messageStr.includes('dispatchRequest') ||

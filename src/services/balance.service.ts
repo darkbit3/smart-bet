@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // API Configuration
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://smart-bet-backend-7wntmhyi0-kaleabs-projects-1bd541ea.vercel.app';
 
 // Create axios instance for balance API
 const apiClient = axios.create({

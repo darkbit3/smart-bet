@@ -33,6 +33,7 @@ export default function Casino() {
   ];
 
   const games: GameEntry[] = [
+    { title: "Bingo", provider: "Smart Bet Gaming", imageUrl: "https://images.unsplash.com/photo-1517248135467-39c9704e5cf5?auto=format&fit=crop&w=400&q=80", isFeatured: true, isNew: true, category: "all" },
     { title: "Mega Fortune Wheel", provider: "NetEnt", imageUrl: "https://images.unsplash.com/photo-1706129867447-b4f156c46641?auto=format&fit=crop&w=400&q=80", isFeatured: true, isNew: false, category: "slots" },
     { title: "Royal Poker Championship", provider: "Evolution Gaming", imageUrl: "https://images.unsplash.com/photo-1670085734257-84c0aa3e357a?auto=format&fit=crop&w=400&q=80", isFeatured: true, isNew: true, category: "table" },
     { title: "European Roulette Pro", provider: "Pragmatic Play", imageUrl: "https://images.unsplash.com/photo-1592602944193-0848995f4b5a?auto=format&fit=crop&w=400&q=80", isFeatured: false, isNew: false, category: "table" },
@@ -136,17 +137,90 @@ export default function Casino() {
       <div className="mb-6">
         <h2 className="text-xl font-bold text-white mb-4">All Games</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
-          {filteredGames.slice(0, visibleCount).map((game, index) => (
-            <GameTile
-              key={index}
-              title={game.title}
-              provider={game.provider}
-              imageUrl={game.imageUrl}
-              isFeatured={game.isFeatured}
-              isNew={game.isNew}
-              onPlay={() => onPlayGame?.(game)}
-            />
-          ))}
+          {filteredGames.slice(0, visibleCount).map((game, index) => {
+            // Special handling for Bingo game
+            if (game.title === "Bingo") {
+              return (
+                <div key={index} className="group relative bg-[#1A1A1A] rounded-xl overflow-hidden border border-[#2A2A2A] hover:border-[#FFD700] transition-all cursor-pointer">
+                  {/* Bingo Game Image */}
+                  <div className="relative aspect-[4/3] overflow-hidden bg-[#0A0A0A]">
+                    <img
+                      src={game.imageUrl}
+                      alt={game.title}
+                      className="w-full h-full object-cover transition-transform group-hover:scale-110"
+                    />
+                    
+                    {/* Overlay on Hover */}
+                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          // Show confirmation panel before navigating
+                          const confirmed = window.confirm(
+                            'Do you want to play Bingo with your Smart Bet account?\n\n' +
+                            'Click OK to play with your balance and player ID displayed.\n' +
+                            'Click Cancel to play without Smart Bet integration.'
+                          );
+                          
+                          if (confirmed) {
+                            // Store navigation flag for cashier integration
+                            sessionStorage.setItem('fromCashier', 'true');
+                            sessionStorage.setItem('showPlayerData', 'true');
+                            // Open Bingo Front in the same window
+                            window.location.href = 'http://localhost:5173';
+                          } else {
+                            // Store navigation flag for normal play
+                            sessionStorage.setItem('fromCashier', 'false');
+                            sessionStorage.setItem('showPlayerData', 'false');
+                            // Open Bingo Front in the same window
+                            window.location.href = 'http://localhost:5173';
+                          }
+                        }}
+                        className="bg-[#FFD700] text-[#121212] px-6 py-3 rounded-lg font-semibold flex items-center gap-2 hover:bg-[#FFC700] transition-colors"
+                      >
+                        Play Now
+                      </button>
+                    </div>
+                  </div>
+                  
+                  {/* Game Info */}
+                  <div className="p-3">
+                    <div className="flex items-start justify-between mb-2">
+                      <div className="flex-1">
+                        <h3 className="text-white font-semibold text-sm mb-1">{game.title}</h3>
+                        <p className="text-gray-400 text-xs">{game.provider}</p>
+                      </div>
+                      <div className="flex gap-1">
+                        {game.isFeatured && (
+                          <span className="bg-[#FFD700]/20 text-[#FFD700] text-xs px-2 py-1 rounded-full font-semibold">
+                            Featured
+                          </span>
+                        )}
+                        {game.isNew && (
+                          <span className="bg-green-500/20 text-green-400 text-xs px-2 py-1 rounded-full font-semibold">
+                            NEW
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            }
+            
+            // Regular game tile for other games
+            return (
+              <GameTile
+                key={index}
+                title={game.title}
+                provider={game.provider}
+                imageUrl={game.imageUrl}
+                isFeatured={game.isFeatured}
+                isNew={game.isNew}
+                onPlay={() => onPlayGame?.(game)}
+              />
+            );
+          })}
         </div>
       </div>
 
