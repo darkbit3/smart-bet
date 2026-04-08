@@ -171,7 +171,7 @@ export default function Bingo() {
   // Send message to bingo iframe
   const sendToBingoIframe = (message: any) => {
     if (iframeRef.current && iframeRef.current.contentWindow) {
-      iframeRef.current.contentWindow.postMessage(message, 'http://localhost:5173');
+      iframeRef.current.contentWindow.postMessage(message, 'https://bingo-0gwl.onrender.com');
     }
   };
 
@@ -179,7 +179,7 @@ export default function Bingo() {
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
       // Verify origin for security
-      if (event.origin !== 'http://localhost:5173') return;
+      if (event.origin !== 'https://bingo-0gwl.onrender.com') return;
 
       console.log('📨 Message from bingo iframe:', event.data);
       
@@ -359,7 +359,7 @@ export default function Bingo() {
           <div className="relative" style={{ height: '600px' }}>
             <iframe
               ref={iframeRef}
-              src="http://localhost:5173"
+              src="https://bingo-0gwl.onrender.com"
               className="w-full h-full border-0"
               title="Bingo Game"
               sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
@@ -397,8 +397,8 @@ export default function Bingo() {
                   <span className="text-sm text-white">Troubleshooting:</span>
                 </div>
                 <ul className="text-xs text-gray-400 space-y-1">
-                  <li>• Check if localhost:5173 is accessible</li>
-                  <li>• Ensure bingo frontend server is running</li>
+                  <li>• Check if bingo-0gwl.onrender.com is accessible</li>
+                  <li>• Ensure bingo frontend service is deployed</li>
                   <li>• Verify backend and bigserver are online</li>
                   <li>• Check your network connection</li>
                 </ul>
