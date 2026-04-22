@@ -4,6 +4,8 @@ import { playerAuthAPI } from '../services/playerAuthService';
 import { useWebToast } from '../components/webToastContainer';
 import { SingleTabService } from '../services/singleTab.service';
 
+const SESSION_VALIDATION_INTERVAL_MS = 60 * 1000;
+
 // Types
 export interface WebUser {
   id: number;
@@ -213,7 +215,8 @@ export const WebAuthProvider: React.FC<{ children: ReactNode }> = ({ children })
                   playerTokenStorage.clearTokens();
                   dispatch({ type: 'LOGOUT' });
                   dispatch({ type: 'SET_SESSION_TIME', payload: 0 });
-                  toast.showInfo('Your session has expired. Please login again.');
+                  const message = apiError.response?.data?.message || 'Your session has expired. Please login again.';
+                  toast.showInfo(message);
                 }
                 // ALL OTHER ERRORS: DO NOTHING - USER STAYS LOGGED IN
               }
@@ -271,7 +274,8 @@ export const WebAuthProvider: React.FC<{ children: ReactNode }> = ({ children })
                   playerTokenStorage.clearTokens();
                   dispatch({ type: 'LOGOUT' });
                   dispatch({ type: 'SET_SESSION_TIME', payload: 0 });
-                  toast.showInfo('Your session has expired. Please login again.');
+                  const message = apiError.response?.data?.message || 'Your session has expired. Please login again.';
+                  toast.showInfo(message);
                 }
               }
             }, 200);
@@ -309,9 +313,38 @@ export const WebAuthProvider: React.FC<{ children: ReactNode }> = ({ children })
     return () => {
       window.removeEventListener('smartbet_tab_logout', handleTabLogout as EventListener);
     };
-  }, []);
+  }, [state.user]);
 
-  
+  useEffect(() => {
+    if (!state.isAuthenticated) {
+      return;
+    }
+
+    const validateSession = async () => {
+      const tokens = playerTokenStorage.getTokens();
+      if (!tokens?.accessToken) {
+        return;
+      }
+
+      try {
+        const response = await playerAuthAPI.getCurrentPlayer(tokens.accessToken);
+        if (!response.success || !response.data) {
+          throw new Error(response.message || 'Session validation failed');
+        }
+      } catch (error: any) {
+        if (error.response?.status === 401 || error.message?.includes('Invalid') || error.message?.includes('terminated')) {
+          toast.showInfo('Your session was ended. Please login again.');
+          playerTokenStorage.clearTokens();
+          dispatch({ type: 'LOGOUT' });
+          dispatch({ type: 'SET_SESSION_TIME', payload: 0 });
+        }
+      }
+    };
+
+    const intervalId = window.setInterval(validateSession, SESSION_VALIDATION_INTERVAL_MS);
+    return () => window.clearInterval(intervalId);
+  }, [state.isAuthenticated]);
+
   // Actions
   const login = async (phone_number: string, password: string): Promise<void> => {
     dispatch({ type: 'SET_LOADING', payload: true });
@@ -365,7 +398,7 @@ export const WebAuthProvider: React.FC<{ children: ReactNode }> = ({ children })
         // Show success toast
         toast.showSuccess(`Welcome back, ${backendData.player.username}! 🎉`);
         
-        // Notify single tab service of login
+        // Notify other tabs that this user has logged in
         singleTabService.onLogin(backendData.player.id, backendData.player.username);
       } else {
         throw new Error('Login failed - invalid response structure');

@@ -1,0 +1,602 @@
+/* Modern SCSS Architecture */
+/* ========================= */
+
+/* Import abstracts */
+@import 'abstracts/variables';
+@import 'abstracts/mixins';
+@import 'abstracts/utilities';
+
+/* Import fonts */
+@import 'fonts';
+
+/* Import Tailwind CSS */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* === MODERN BASE STYLES === */
+@layer base {
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    font-size: 16px;
+    font-family: map-get($font-families, 'primary');
+    line-height: map-get($line-heights, 'normal');
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    background: map-get($colors, 'bg-primary');
+    background-image: 
+      radial-gradient(circle at 25% 25%, rgba(255, 215, 0, 0.05) 0%, transparent 50%),
+      radial-gradient(circle at 75% 75%, rgba(255, 215, 0, 0.03) 0%, transparent 50%),
+      radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.02) 0%, transparent 50%);
+    color: map-get($colors, 'text-primary');
+    min-width: 320px;
+    overflow-x: hidden;
+    min-height: 100vh;
+    font-family: map-get($font-families, 'primary');
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  img, video, iframe, canvas {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  /* Modern Typography */
+  html {
+    font-size: 16px;
+    font-family: map-get($font-families, 'primary');
+  }
+
+  h1 {
+    font-size: map-get($font-sizes, '4xl');
+    font-weight: map-get($font-weights, 'extrabold');
+    line-height: map-get($line-heights, 'tight');
+    letter-spacing: -0.025em;
+    color: var(--color-text-primary);
+  }
+
+  h2 {
+    font-size: map-get($font-sizes, '3xl');
+    font-weight: map-get($font-weights, 'bold');
+    line-height: map-get($line-heights, 'snug');
+    letter-spacing: -0.02em;
+    color: var(--color-text-primary);
+  }
+
+  h3 {
+    font-size: map-get($font-sizes, '2xl');
+    font-weight: map-get($font-weights, 'semibold');
+    line-height: map-get($line-heights, 'normal');
+    letter-spacing: -0.015em;
+    color: var(--color-text-primary);
+  }
+
+  h4 {
+    font-size: map-get($font-sizes, 'xl');
+    font-weight: map-get($font-weights, 'semibold');
+    line-height: map-get($line-heights, 'normal');
+    letter-spacing: -0.01em;
+    color: var(--color-text-primary);
+  }
+
+  p {
+    font-size: map-get($font-sizes, 'base');
+    font-weight: map-get($font-weights, 'normal');
+    line-height: map-get($line-heights, 'relaxed');
+    color: var(--color-text-secondary);
+  }
+
+  label {
+    font-size: map-get($font-sizes, 'sm');
+    font-weight: map-get($font-weights, 'medium');
+    line-height: map-get($line-heights, 'normal');
+    color: var(--color-text-primary);
+  }
+
+  button {
+    font-size: map-get($font-sizes, 'sm');
+    font-weight: map-get($font-weights, 'semibold');
+    line-height: map-get($line-heights, 'normal');
+    letter-spacing: 0.025em;
+    color: var(--color-text-primary);
+    @include transition();
+  }
+
+  input {
+    font-size: map-get($font-sizes, 'base');
+    font-weight: map-get($font-weights, 'normal');
+    line-height: map-get($line-heights, 'normal');
+    color: var(--color-text-primary);
+  }
+
+  /* Responsive Typography */
+  @include respond-to-max('lg') {
+    html {
+      font-size: 15px;
+    }
+    
+    h1 { font-size: map-get($font-sizes, '3xl'); }
+    h2 { font-size: map-get($font-sizes, '2xl'); }
+    h3 { font-size: map-get($font-sizes, 'xl'); }
+    h4 { font-size: map-get($font-sizes, 'lg'); }
+  }
+
+  @include respond-to-max('md') {
+    html {
+      font-size: 14px;
+    }
+    
+    h1 { font-size: map-get($font-sizes, '2xl'); }
+    h2 { font-size: map-get($font-sizes, 'xl'); }
+    h3 { font-size: map-get($font-sizes, 'lg'); }
+    h4 { font-size: map-get($font-sizes, 'base'); }
+  }
+
+  @include respond-to-max('sm') {
+    html {
+      font-size: 13px;
+    }
+    
+    h1 { font-size: map-get($font-sizes, 'xl'); }
+    h2 { font-size: map-get($font-sizes, 'lg'); }
+    h3 { font-size: map-get($font-sizes, 'base'); }
+    h4 { font-size: map-get($font-sizes, 'sm'); }
+  }
+}
+
+/* Animations */
+/* ---------- */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+@keyframes glow {
+  0%, 100% {
+    box-shadow: var(--shadow-glow);
+  }
+  50% {
+    box-shadow: var(--shadow-glow-lg);
+  }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes spinReverse {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(-25%);
+    animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+  }
+  50% {
+    transform: translateY(0);
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  }
+}
+
+/* === MODERN COMPONENT SYSTEM === */
+@layer components {
+  /* Enhanced Button Variants */
+  .btn {
+    @include button-modern('secondary');
+    
+    &--primary {
+      @include button-modern('primary');
+    }
+    
+    &--outline {
+      @include button-modern('outline');
+    }
+    
+    &--ghost {
+      @include button-modern('ghost');
+    }
+    
+    &--success {
+      @include button-modern('success');
+    }
+    
+    &--error {
+      @include button-modern('error');
+    }
+    
+    &--sm {
+      padding: map-get($spacing, '2') map-get($spacing, '4');
+      font-size: map-get($font-sizes, 'xs');
+      min-height: 36px;
+      min-width: 36px;
+    }
+    
+    &--lg {
+      padding: map-get($spacing, '4') map-get($spacing, '8');
+      font-size: map-get($font-sizes, 'base');
+      min-height: 52px;
+      min-width: 52px;
+    }
+    
+    &--xl {
+      padding: map-get($spacing, '5') map-get($spacing, '10');
+      font-size: map-get($font-sizes, 'lg');
+      min-height: 60px;
+      min-width: 60px;
+    }
+    
+    &--full {
+      width: 100%;
+    }
+    
+    &--rounded {
+      border-radius: map-get($radius, 'full');
+    }
+    
+    &--loading {
+      pointer-events: none;
+      opacity: 0.8;
+      
+      &::after {
+        content: '';
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        border: 2px solid transparent;
+        border-top-color: currentColor;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+    }
+  }
+
+  // Modern Input Variants
+  .input {
+    @include input-modern();
+    
+    &--sm {
+      padding: map-get($spacing, '2') map-get($spacing, '3');
+      font-size: map-get($font-sizes, 'sm');
+    }
+    
+    &--lg {
+      padding: map-get($spacing, '4') map-get($spacing, '5');
+      font-size: map-get($font-sizes, 'lg');
+    }
+    
+    &--error {
+      @include input-error();
+    }
+    
+    &--success {
+      @include input-success();
+    }
+    
+    &--disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  // Enhanced Card Variants
+  .card {
+    @include card-modern();
+    
+    &--interactive {
+      cursor: pointer;
+      @include hover-lift();
+    }
+    
+    &--glass {
+      @include glass-card();
+    }
+    
+    &--dark {
+      @include glass-dark();
+    }
+    
+    &--bordered {
+      border: 2px solid map-get($colors, 'border-accent');
+    }
+    
+    &--shadow-lg {
+      box-shadow: map-get($shadows, 'lg');
+    }
+    
+    &--shadow-xl {
+      box-shadow: map-get($shadows, 'xl');
+    }
+    
+    &--elevated {
+      @extend .card--shadow-xl;
+    }
+    
+    &--gradient {
+      background: map-get($gradients, 'surface');
+      border: 1px solid rgba(255, 215, 0, 0.2);
+    }
+    
+    &--premium {
+      background: map-get($gradients, 'card');
+      border: 1px solid rgba(255, 215, 0, 0.3);
+      box-shadow: map-get($shadows, 'glow');
+      
+      &:hover {
+        box-shadow: map-get($shadows, 'glow-lg');
+        border-color: rgba(255, 215, 0, 0.5);
+      }
+    }
+  }
+
+  // Modern Modal Variants
+  .modal {
+    &__overlay {
+      @include modal-overlay();
+    }
+    
+    &__content {
+      @include modal-content();
+      
+      &--sm {
+        max-width: 400px;
+      }
+      
+      &--md {
+        max-width: 600px;
+      }
+      
+      &--lg {
+        max-width: 800px;
+      }
+      
+      &--xl {
+        max-width: 1200px;
+      }
+      
+      &--full {
+        max-width: 100%;
+        height: 100vh;
+        border-radius: 0;
+      }
+    }
+  }
+
+  // Navigation Components
+  .nav {
+    &__container {
+      @include flex-between();
+      padding: map-get($spacing, '4') map-get($spacing, '6');
+      background: var(--color-bg-secondary);
+      border-bottom: 1px solid var(--color-border-primary);
+    }
+    
+    &__brand {
+      font-size: map-get($font-sizes, 'xl');
+      font-weight: map-get($font-weights, 'bold');
+      color: var(--color-primary);
+      text-decoration: none;
+      @include text-gradient();
+    }
+    
+    &__menu {
+      @include flex-center();
+      gap: map-get($spacing, '6');
+    }
+    
+    &__item {
+      color: var(--color-text-secondary);
+      text-decoration: none;
+      font-weight: map-get($font-weights, 'medium');
+      @include transition(color);
+      
+      &:hover {
+        color: var(--color-primary);
+      }
+      
+      &--active {
+        color: var(--color-primary);
+      }
+    }
+  }
+
+  // Form Components
+  .form {
+    &__group {
+      margin-bottom: map-get($spacing, '4');
+    }
+    
+    &__label {
+      display: block;
+      margin-bottom: map-get($spacing, '2');
+      font-weight: map-get($font-weights, 'medium');
+    }
+    
+    &__input {
+      width: 100%;
+    }
+    
+    &__error {
+      color: var(--color-error);
+      font-size: map-get($font-sizes, 'sm');
+      margin-top: map-get($spacing, '1');
+    }
+    
+    &__helper {
+      color: var(--color-text-muted);
+      font-size: map-get($font-sizes, 'sm');
+      margin-top: map-get($spacing, '1');
+    }
+  }
+
+  // Loading Components
+  .loading {
+    &__spinner {
+      @include flex-center();
+      width: 40px;
+      height: 40px;
+      
+      &::after {
+        content: '';
+        width: 32px;
+        height: 32px;
+        border: 3px solid var(--color-border-primary);
+        border-top-color: var(--color-primary);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+    }
+    
+    &__skeleton {
+      @include loading-skeleton();
+      height: 20px;
+      margin-bottom: map-get($spacing, '2');
+      
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  // Status Components
+  .status {
+    @include flex-center();
+    gap: map-get($spacing, '2');
+    padding: map-get($spacing, '2') map-get($spacing, '3');
+    border-radius: map-get($radius, 'md');
+    font-size: map-get($font-sizes, 'sm');
+    font-weight: map-get($font-weights, 'medium');
+    
+    &--success {
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--color-success);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+    
+    &--warning {
+      background: rgba(245, 158, 11, 0.1);
+      color: var(--color-warning);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+    }
+    
+    &--error {
+      background: rgba(239, 68, 68, 0.1);
+      color: var(--color-error);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+    
+    &--info {
+      background: rgba(59, 130, 246, 0.1);
+      color: var(--color-info);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+    }
+  }
+}
+
+/* Layout Utilities */
+/* ---------------- */
+@layer utilities {
+  /* Modern Grid System */
+  .grid-modern {
+    display: grid;
+    gap: map-get($spacing, '4');
+    
+    &--cols-1 { grid-template-columns: repeat(1, 1fr); }
+    &--cols-2 { grid-template-columns: repeat(2, 1fr); }
+    &--cols-3 { grid-template-columns: repeat(3, 1fr); }
+    &--cols-4 { grid-template-columns: repeat(4, 1fr); }
+    &--cols-6 { grid-template-columns: repeat(6, 1fr); }
+    &--cols-12 { grid-template-columns: repeat(12, 1fr); }
+    
+    @include respond-to-max('md') {
+      &--cols-3 { grid-template-columns: repeat(2, 1fr); }
+      &--cols-4 { grid-template-columns: repeat(2, 1fr); }
+      &--cols-6 { grid-template-columns: repeat(2, 1fr); }
+      &--cols-12 { grid-template-columns: repeat(1, 1fr); }
+    }
+    
+    @include respond-to-max('sm') {
+      &--cols-2 { grid-template-columns: repeat(1, 1fr); }
+      &--cols-3 { grid-template-columns: repeat(1, 1fr); }
+      &--cols-4 { grid-template-columns: repeat(1, 1fr); }
+      &--cols-6 { grid-template-columns: repeat(1, 1fr); }
+      &--cols-12 { grid-template-columns: repeat(1, 1fr); }
+    }
+  }
+
+  /* Modern Section Spacing */
+  .section {
+    padding: map-get($spacing, '16') 0;
+    
+    &--sm { padding: map-get($spacing, '8') 0; }
+    &--md { padding: map-get($spacing, '12') 0; }
+    &--lg { padding: map-get($spacing, '20') 0; }
+    &--xl { padding: map-get($spacing, '24') 0; }
+    
+    @include respond-to-max('md') {
+      padding: map-get($spacing, '12') 0;
+      
+      &--sm { padding: map-get($spacing, '6') 0; }
+      &--md { padding: map-get($spacing, '8') 0; }
+      &--lg { padding: map-get($spacing, '12') 0; }
+      &--xl { padding: map-get($spacing, '16') 0; }
+    }
+  }
+}

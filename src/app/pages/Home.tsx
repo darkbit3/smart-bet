@@ -199,7 +199,7 @@ export default function Home() {
   }, [isAuthenticated, selectedGame]);
 
   return (
-    <div className="min-h-screen bg-[#121212] flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col animate-fade-in"> 
       <BalanceHeader
         onSignOut={handleLogout}
         onLogin={openLogin}
@@ -269,12 +269,12 @@ export default function Home() {
 
       {selectedGame && isGameOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/80 flex items-center justify-center p-4"
+          className="fixed inset-0 z-40 modal-modern flex items-center justify-center p-4 animate-slide-up"
           onClick={closeGame}
         >
           <div
             ref={modalWrapperRef}
-            className="relative w-full h-full max-w-6xl max-h-[90vh] rounded-2xl overflow-hidden bg-[#121212] border border-[#333] shadow-2xl"
+            className="relative w-full h-full max-w-6xl max-h-[90vh] modal-content-modern overflow-hidden hover-lift"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="absolute top-4 right-4 z-50 flex gap-2">
@@ -323,6 +323,13 @@ export default function Home() {
           </div>
         </div>
       )}
+
+      {/* Network Info */}
+      <div className="bg-gray-800 text-gray-300 text-xs p-2 text-center">
+        <div>➜ Local: http://localhost:5174/</div>
+        <div>➜ Network: http://10.139.86.200:5174/</div>
+        <div>➜ Network: http://192.168.137.1:5174/</div>
+      </div>
 
       <BottomNav />
       {isLoading && <Loading />}

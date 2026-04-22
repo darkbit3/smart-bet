@@ -165,7 +165,7 @@ export function AccountSettingsModal({
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-50 p-4">
-      <div className="bg-[#121212] w-full max-w-4xl max-h-[90vh] overflow-hidden rounded-2xl border border-[#2A2A2A] shadow-2xl">
+      <div className="modal-modern w-full max-w-4xl max-h-[90vh] overflow-hidden">
         {/* HEADER */}
         <div className="flex justify-between items-center p-4 border-b border-[#2A2A2A]">
           <h2 className="text-white text-xl font-bold">My Account</h2>

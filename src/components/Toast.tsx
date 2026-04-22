@@ -65,7 +65,7 @@ export default function Toast({ id, type, message, duration = 3000, onClose }: T
   return (
     <div
       className={`
-        fixed bottom-4 right-4 z-50 flex items-center gap-3 p-4 rounded-lg border backdrop-blur-sm
+        flex items-center gap-3 p-4 rounded-lg border backdrop-blur-sm
         shadow-lg max-w-sm transition-all duration-300 ease-in-out
         ${getBackgroundColor()}
         ${isVisible && !isLeaving ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'}

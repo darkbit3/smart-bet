@@ -157,7 +157,7 @@ export const SkeletonList: React.FC<{ count?: number }> = ({ count = 3 }) => (
 
 // Page Loading Component
 export const PageLoading: React.FC<{ text?: string }> = ({ text = "Loading..." }) => (
-  <div className="min-h-screen flex items-center justify-center bg-[#121212]">
+  <div className="container-modern flex items-center justify-center p-4">
     <div className="flex flex-col items-center justify-center gap-6 px-8 py-8 rounded-2xl bg-[#1a1a1a] border border-[#2a2a2a] shadow-2xl">
       <div className="relative">
         <div className="h-16 w-16 rounded-full border-4 border-[#FFD700]/20" />

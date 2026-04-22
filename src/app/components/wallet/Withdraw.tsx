@@ -17,10 +17,10 @@ export function Withdraw({ selectedWithdrawMethod, setSelectedWithdrawMethod, ha
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <button 
             onClick={() => setSelectedWithdrawMethod('Bank Transfer')}
-            className={`p-6 border rounded-lg transition-colors text-left ${
+            className={`card-modern p-6 transition-colors text-left cursor-pointer ${
               selectedWithdrawMethod === 'Bank Transfer'
-                ? 'bg-[#FFD700] text-[#121212] border-[#FFD700]'
-                : 'bg-[#1A1A1A] border-[#2A2A2A] hover:border-[#FFD700]'
+                ? 'bg-[#FFD700] text-[#121212] border-[#FFD700] shadow-glow'
+                : 'hover-lift'
             }`}
           >
             <div className="flex items-center gap-3 mb-2">
@@ -45,10 +45,10 @@ export function Withdraw({ selectedWithdrawMethod, setSelectedWithdrawMethod, ha
 
           <button 
             onClick={() => setSelectedWithdrawMethod('PayPal')}
-            className={`p-6 border rounded-lg transition-colors text-left ${
+            className={`card-modern p-6 transition-colors text-left cursor-pointer ${
               selectedWithdrawMethod === 'PayPal'
-                ? 'bg-[#FFD700] text-[#121212] border-[#FFD700]'
-                : 'bg-[#1A1A1A] border-[#2A2A2A] hover:border-[#FFD700]'
+                ? 'bg-[#FFD700] text-[#121212] border-[#FFD700] shadow-glow'
+                : 'hover-lift'
             }`}
           >
             <div className="flex items-center gap-3 mb-2">
@@ -73,10 +73,10 @@ export function Withdraw({ selectedWithdrawMethod, setSelectedWithdrawMethod, ha
 
           <button 
             onClick={() => setSelectedWithdrawMethod('Crypto')}
-            className={`p-6 border rounded-lg transition-colors text-left ${
+            className={`card-modern p-6 transition-colors text-left cursor-pointer ${
               selectedWithdrawMethod === 'Crypto'
-                ? 'bg-[#FFD700] text-[#121212] border-[#FFD700]'
-                : 'bg-[#1A1A1A] border-[#2A2A2A] hover:border-[#FFD700]'
+                ? 'bg-[#FFD700] text-[#121212] border-[#FFD700] shadow-glow'
+                : 'hover-lift'
             }`}
           >
             <div className="flex items-center gap-3 mb-2">
@@ -101,10 +101,10 @@ export function Withdraw({ selectedWithdrawMethod, setSelectedWithdrawMethod, ha
 
           <button 
             onClick={() => setSelectedWithdrawMethod('Voucher')}
-            className={`p-6 border rounded-lg transition-colors text-left ${
+            className={`card-modern p-6 transition-colors text-left cursor-pointer ${
               selectedWithdrawMethod === 'Voucher'
-                ? 'bg-[#FFD700] text-[#121212] border-[#FFD700]'
-                : 'bg-[#1A1A1A] border-[#2A2A2A] hover:border-[#FFD700]'
+                ? 'bg-[#FFD700] text-[#121212] border-[#FFD700] shadow-glow'
+                : 'hover-lift'
             }`}
           >
             <div className="flex items-center gap-3 mb-2">
@@ -132,10 +132,10 @@ export function Withdraw({ selectedWithdrawMethod, setSelectedWithdrawMethod, ha
               console.log('🔴 Cashout Agent button clicked');
               setSelectedWithdrawMethod('Cashout Agent');
             }}
-            className={`p-6 border rounded-lg transition-colors text-left ${
+            className={`card-modern p-6 transition-colors text-left cursor-pointer ${
               selectedWithdrawMethod === 'Cashout Agent'
-                ? 'bg-[#FFD700] text-[#121212] border-[#FFD700]'
-                : 'bg-[#1A1A1A] border-[#2A2A2A] hover:border-[#FFD700]'
+                ? 'bg-[#FFD700] text-[#121212] border-[#FFD700] shadow-glow'
+                : 'hover-lift'
             }`}
           >
             <div className="flex items-center gap-3 mb-2">

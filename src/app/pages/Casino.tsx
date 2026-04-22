@@ -92,7 +92,7 @@ export default function Casino() {
   }, [activeTab, searchQuery]);
 
   return (
-    <div className="max-w-7xl mx-auto px-3 py-4">
+    <div className="container-modern py-6 animate-fade-in">
       {/* Hero Carousel - Progressive Jackpot & Hot This Week */}
       <HeroCarousel />
 
@@ -103,7 +103,7 @@ export default function Casino() {
           <input
             type="text"
             placeholder="Search games..."
-            className="w-full bg-[#1A1A1A] border border-[#2A2A2A] rounded-xl pl-12 pr-4 py-3 text-white placeholder:text-gray-500 focus:outline-none focus:border-[#FFD700] transition-colors"
+            className="input-modern w-full pl-12 pr-4 py-3 text-foreground placeholder:text-muted-foreground focus-modern"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -119,10 +119,10 @@ export default function Casino() {
               <button
                 key={category.id}
                 onClick={() => setActiveTab(category.id)}
-                className={`px-4 py-2.5 rounded-lg font-semibold text-sm flex items-center gap-2 transition-all whitespace-nowrap ${
+                className={`px-4 py-2.5 rounded-lg font-semibold text-sm flex items-center gap-2 transition-all whitespace-nowrap card-modern hover-lift ${
                   activeTab === category.id
-                    ? "bg-[#FFD700] text-[#121212]"
-                    : "bg-[#1A1A1A] text-gray-400 hover:text-white border border-[#2A2A2A]"
+                    ? "bg-gradient-gold text-black shadow-glow"
+                    : "bg-card text-muted-foreground hover:text-foreground border border-border/20"
                 }`}
               >
                 {Icon && <Icon className="w-4 h-4" />}
@@ -141,7 +141,7 @@ export default function Casino() {
             // Special handling for Bingo game
             if (game.title === "Bingo") {
               return (
-                <div key={index} className="group relative bg-[#1A1A1A] rounded-xl overflow-hidden border border-[#2A2A2A] hover:border-[#FFD700] transition-all cursor-pointer">
+                <div key={index} className="group relative card-modern overflow-hidden hover-lift cursor-pointer">
                   {/* Bingo Game Image */}
                   <div className="relative aspect-[4/3] overflow-hidden bg-[#0A0A0A]">
                     <img
@@ -229,7 +229,7 @@ export default function Casino() {
         {visibleCount < filteredGames.length && (
           <button
             onClick={() => setVisibleCount((prev) => Math.min(prev + 20, filteredGames.length))}
-            className="bg-[#1A1A1A] hover:bg-[#2A2A2A] text-white px-8 py-3 rounded-xl font-semibold border border-[#2A2A2A] transition-colors"
+            className="card-modern hover-lift text-foreground px-8 py-3 font-semibold transition-all"
           >
             Load More Games
           </button>
@@ -237,7 +237,7 @@ export default function Casino() {
         {visibleCount > 20 && (
           <button
             onClick={() => setVisibleCount(20)}
-            className="bg-[#FFD700] hover:bg-[#FFC700] text-[#121212] px-8 py-3 rounded-xl font-semibold transition-colors"
+            className="btn-modern text-black px-8 py-3 font-semibold"
           >
             Show Less Games
           </button>

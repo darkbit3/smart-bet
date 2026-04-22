@@ -192,7 +192,7 @@ export default function WebHome() {
   }, [isAuthenticated, selectedGame]);
 
   return (
-    <div className="min-h-screen bg-[#121212] flex flex-col">
+    <div className="container-modern flex flex-col">
       <WebBalanceHeader
         phoneNumber={user?.phone_number}
         balance={balance}
@@ -274,7 +274,7 @@ export default function WebHome() {
         >
           <div
             ref={modalWrapperRef}
-            className="relative w-full h-full max-w-6xl max-h-[90vh] rounded-2xl overflow-hidden bg-[#121212] border border-[#333] shadow-2xl"
+            className="modal-modern relative w-full h-full max-w-6xl max-h-[90vh] overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="absolute top-4 right-4 z-50 flex gap-2">

@@ -140,7 +140,7 @@ export function BalanceHeader({ onSignOut, onLogin, onRegister, onDeposit, onAcc
 
   return (
     <>
-      <div className="bg-[#1A1A1A] border-b border-[#2A2A2A] px-4 py-3">
+    <div className="glass-dark border-b border-border/20 px-4 py-3 backdrop-blur-xl">
         <div className="responsive-container flex items-center justify-between">
           {/* Logo */}
           <div
@@ -161,7 +161,7 @@ export function BalanceHeader({ onSignOut, onLogin, onRegister, onDeposit, onAcc
               <div className="hidden sm:block relative">
                 <button
                   onClick={toggleBalanceDropdown}
-                  className="flex items-center gap-4 bg-[#121212] rounded-lg px-4 py-2 border border-[#2A2A2A] hover:border-[#FFD700] transition-colors"
+                  className="card-modern flex items-center gap-4 px-4 py-2 cursor-pointer hover-lift"
                 >
                   <div className="flex items-center gap-2">
                     <Wallet className="w-4 h-4 text-[#FFD700]" />
@@ -208,7 +208,7 @@ export function BalanceHeader({ onSignOut, onLogin, onRegister, onDeposit, onAcc
                 {showBalanceDropdown && (
                   <>
                     <div className="fixed inset-0 z-10" onClick={() => setShowBalanceDropdown(false)} />
-                    <div className="absolute left-0 mt-2 w-64 bg-[#1A1A1A] border border-[#2A2A2A] rounded-lg shadow-xl z-20 overflow-hidden">
+                    <div className="absolute left-0 mt-2 w-64 modal-content-modern shadow-glow animate-slide-down overflow-hidden">
                       <div className="p-3 border-b border-[#2A2A2A]">
                         <div className="text-xs text-gray-400 mb-1">Balance Overview</div>
                       </div>
@@ -223,7 +223,7 @@ export function BalanceHeader({ onSignOut, onLogin, onRegister, onDeposit, onAcc
               <div className="sm:hidden relative">
                 <button
                   onClick={toggleBalanceDropdown}
-                  className="flex items-center gap-2 bg-[#121212] rounded-lg px-3 py-2 border border-[#2A2A2A] hover:border-[#FFD700] transition-colors"
+                  className="card-modern flex items-center gap-2 px-3 py-2 cursor-pointer hover-lift"
                 >
                   <Wallet className="w-4 h-4 text-[#FFD700]" />
                   <span className="text-sm font-semibold text-white">
@@ -266,7 +266,7 @@ export function BalanceHeader({ onSignOut, onLogin, onRegister, onDeposit, onAcc
                 {showBalanceDropdown && (
                   <>
                     <div className="fixed inset-0 z-10" onClick={() => setShowBalanceDropdown(false)} />
-                    <div className="absolute left-0 mt-2 w-56 bg-[#1A1A1A] border border-[#2A2A2A] rounded-lg shadow-xl z-20 overflow-hidden">
+                    <div className="absolute left-0 mt-2 w-56 modal-content-modern shadow-glow animate-slide-down overflow-hidden">
                       <div className="p-3 border-b border-[#2A2A2A]">
                         <div className="text-xs text-gray-400 mb-1">Balance Overview</div>
                       </div>
@@ -289,7 +289,7 @@ export function BalanceHeader({ onSignOut, onLogin, onRegister, onDeposit, onAcc
               <div className="relative">
                 <button
                   onClick={() => setShowDropdown(!showDropdown)}
-                  className="bg-[#121212] hover:bg-[#2A2A2A] text-white px-3 py-2 rounded-lg flex items-center gap-2 border border-[#2A2A2A] transition-colors"
+                  className="card-modern text-white px-3 py-2 flex items-center gap-2 cursor-pointer hover-lift"
                 >
                   <User className="w-4 h-4" />
                   <span className="hidden md:inline text-sm">{username}</span>
@@ -302,7 +302,7 @@ export function BalanceHeader({ onSignOut, onLogin, onRegister, onDeposit, onAcc
                       className="fixed inset-0 z-10"
                       onClick={() => setShowDropdown(false)}
                     />
-                    <div className="absolute right-0 mt-2 w-56 bg-[#1A1A1A] border border-[#2A2A2A] rounded-lg shadow-xl z-20 overflow-hidden">
+                    <div className="absolute right-0 mt-2 w-56 modal-content-modern shadow-glow animate-slide-down overflow-hidden">
                       <div className="p-3 border-b border-[#2A2A2A]">
                         <div className="text-sm text-white font-semibold">{username}</div>
                         <div className="text-xs text-gray-400">VIP Level: Gold</div>
@@ -395,7 +395,7 @@ export function BalanceHeader({ onSignOut, onLogin, onRegister, onDeposit, onAcc
       </div>
 
       {/* Desktop Navigation */}
-      <div className="bg-[#121212] border-b border-[#2A2A2A] px-4 py-3">
+      <div className="glass-dark border-b border-[#2A2A2A] px-4 py-3">
         <div className="max-w-7xl mx-auto flex items-center justify-center">
           <DesktopNav />
         </div>
@@ -403,10 +403,10 @@ export function BalanceHeader({ onSignOut, onLogin, onRegister, onDeposit, onAcc
 
       {/* Account History Modal */}
       {showAccountHistoryModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4" onClick={() => setShowAccountHistoryModal(false)}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center modal-modern p-4 animate-fade-in" onClick={() => setShowAccountHistoryModal(false)}>
           <div 
             onClick={(e) => e.stopPropagation()} 
-            className="bg-[#121212] w-full max-w-6xl max-h-[90vh] overflow-y-auto rounded-2xl border border-[#2A2A2A] shadow-xl"
+            className="modal-content-modern w-full max-w-6xl max-h-[90vh] overflow-y-auto scrollbar-modern hover-lift"
           >
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-bold text-white flex items-center gap-2">

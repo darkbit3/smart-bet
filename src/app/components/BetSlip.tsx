@@ -66,7 +66,7 @@ export function BetSlip({ isOpen, onClose }: BetSlipProps) {
             bets.map((bet) => (
               <div
                 key={bet.id}
-                className="bg-[#121212] border border-[#2A2A2A] rounded-lg p-3"
+                className="card-modern p-3"
               >
                 <div className="flex items-start justify-between mb-2">
                   <div className="flex-1">

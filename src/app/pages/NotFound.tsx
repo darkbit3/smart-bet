@@ -15,7 +15,7 @@ export default function NotFound() {
   }, [seconds, navigate]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#121212] text-white p-4">
+    <div className="container-modern flex items-center justify-center p-4 text-white">
       <div className="max-w-md w-full text-center border border-[#2a2a2a] bg-[#1a1a1a] p-8 rounded-xl shadow-lg">
         <h1 className="text-4xl font-bold mb-3">404</h1>
         <p className="mb-4 text-gray-300">Page not found.</p>

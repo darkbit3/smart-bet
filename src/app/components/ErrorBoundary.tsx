@@ -26,7 +26,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen bg-[#121212] text-white flex items-center justify-center p-4">
+        <div className="container-modern text-white flex items-center justify-center p-4">
           <div className="max-w-lg text-center bg-[#1a1a1a] border border-[#2a2a2a] p-8 rounded-lg">
             <h1 className="text-2xl font-bold mb-4">Something went wrong</h1>
             <p className="mb-6">Sorry, an unexpected error happened. Please refresh or try again later.</p>

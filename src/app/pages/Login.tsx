@@ -680,8 +680,8 @@ export default function Login({ isOpen, initialMode = "login", onClose, onSucces
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4" onClick={onClose}>
-      <div onClick={(e) => e.stopPropagation()} className="bg-[#121212] w-full max-w-md rounded-2xl border border-[#2A2A2A] shadow-xl overflow-auto max-h-[90vh]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center modal-modern p-4 animate-fade-in" onClick={onClose}>
+      <div onClick={(e) => e.stopPropagation()} className="modal-content-modern w-full max-w-md overflow-auto max-h-[90vh] hover-lift scrollbar-modern">
         <div className="flex items-center justify-between p-4 border-b border-[#2A2A2A]">
           <h2 className="text-xl font-bold text-white">Smart Bet</h2>
           <button onClick={onClose} className="text-gray-400 hover:text-white">
@@ -746,7 +746,7 @@ export default function Login({ isOpen, initialMode = "login", onClose, onSucces
                       onChange={(e) => setResetPhone(normalizePhoneInput(e.target.value))}
                       placeholder="9XXXXXXXX"
                       maxLength={9}
-                      className="w-full bg-[#1A1A1A] border border-[#2A2A2A] rounded-lg pl-24 pr-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-[#FFD700] transition-colors"
+                      className="input-modern w-full pl-24 pr-4 py-3 focus-modern"
                     />
                   </div>
                   <button
@@ -767,7 +767,7 @@ export default function Login({ isOpen, initialMode = "login", onClose, onSucces
                     value={resetOtp}
                     onChange={(e) => setResetOtp(e.target.value)}
                     maxLength={6}
-                    className="w-full bg-[#1A1A1A] border border-[#2A2A2A] rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-[#FFD700] transition-colors"
+                    className="input-modern w-full px-4 py-3 focus-modern"
                     placeholder="6-digit code"
                   />
                   <button
@@ -857,7 +857,7 @@ export default function Login({ isOpen, initialMode = "login", onClose, onSucces
                       type={showNewPassword ? "text" : "password"}
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
-                      className="w-full bg-[#1A1A1A] border border-[#2A2A2A] rounded-lg px-4 py-3 pr-12 text-white placeholder-gray-500 focus:outline-none focus:border-[#FFD700] transition-colors"
+                      className="input-modern w-full px-4 py-3 pr-12 focus-modern"
                     />
                     <button
                       type="button"
@@ -873,7 +873,7 @@ export default function Login({ isOpen, initialMode = "login", onClose, onSucces
                       type={showConfirmNewPassword ? "text" : "password"}
                       value={confirmNewPassword}
                       onChange={(e) => setConfirmNewPassword(e.target.value)}
-                      className="w-full bg-[#1A1A1A] border border-[#2A2A2A] rounded-lg px-4 py-3 pr-12 text-white placeholder-gray-500 focus:outline-none focus:border-[#FFD700] transition-colors"
+                      className="input-modern w-full px-4 py-3 pr-12 focus-modern"
                     />
                     <button
                       type="button"
@@ -937,7 +937,7 @@ export default function Login({ isOpen, initialMode = "login", onClose, onSucces
                   value={registerOtp}
                   onChange={(e) => setRegisterOtp(e.target.value)}
                   maxLength={6}
-                  className="w-full bg-[#1A1A1A] border border-[#2A2A2A] rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-[#FFD700] transition-colors"
+                  className="input-modern w-full px-4 py-3 focus-modern"
                   placeholder="6-digit code from Telegram"
                 />
                 <button
@@ -1003,7 +1003,7 @@ export default function Login({ isOpen, initialMode = "login", onClose, onSucces
                     }}
                     placeholder="9XXXXXXXX"
                     maxLength={9}
-                    className="w-full bg-[#1A1A1A] border border-[#2A2A2A] rounded-lg pl-24 pr-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-[#FFD700] transition-colors"
+                    className="input-modern w-full pl-24 pr-4 py-3 focus-modern"
                     autoFocus
                   />
                 </div>
@@ -1020,7 +1020,7 @@ export default function Login({ isOpen, initialMode = "login", onClose, onSucces
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Enter your password"
                     maxLength={15}
-                    className="w-full bg-[#1A1A1A] border border-[#2A2A2A] rounded-lg pl-11 pr-12 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-[#FFD700] transition-colors"
+                    className="input-modern w-full pl-11 pr-12 py-3 focus-modern"
                   />
                   <button
                     type="button"
@@ -1070,7 +1070,7 @@ export default function Login({ isOpen, initialMode = "login", onClose, onSucces
                   onChange={(e) => setRegisterUsername(e.target.value)}
                   placeholder=""
                   required
-                  className={`w-full bg-[#1A1A1A] border ${usernameStatus === 'taken' || usernameStatus === 'too_short' ? 'border-red-500' : usernameStatus === 'available' ? 'border-green-500' : 'border-[#2A2A2A]'} rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-[#FFD700] transition-colors peer`}
+                  className={`input-modern w-full px-4 py-3 peer focus-modern ${usernameStatus === 'taken' || usernameStatus === 'too_short' ? 'border-red-500' : usernameStatus === 'available' ? 'border-green-500' : ''}`}
                 />
                 <label className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 transition-all duration-200 peer-focus:top-1 peer-focus:text-xs peer-focus:text-[#FFD700] peer-valid:top-1 peer-valid:text-xs peer-valid:text-[#FFD700] pointer-events-none">Username</label>
                 {usernameStatus === "checking" && <p className="mt-1 text-xs text-yellow-500">Checking availability...</p>}
@@ -1094,7 +1094,7 @@ export default function Login({ isOpen, initialMode = "login", onClose, onSucces
                   placeholder=""
                   maxLength={9}
                   required
-                  className={`w-full bg-[#121212] border ${phoneStatus === 'taken' || phoneStatus === 'invalid' || registerPhoneError ? 'border-red-500' : phoneStatus === 'available' ? 'border-green-500' : 'border-[#2A2A2A]'} rounded-lg pl-24 pr-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-[#FFD700] transition-colors peer`}
+                  className={`input-modern w-full pl-24 pr-4 py-3 peer focus-modern ${phoneStatus === 'taken' || phoneStatus === 'invalid' || registerPhoneError ? 'border-red-500' : phoneStatus === 'available' ? 'border-green-500' : ''}`}
                 />
                 <label className="absolute left-24 top-1/2 -translate-y-1/2 text-gray-400 transition-all duration-200 peer-focus:top-1 peer-focus:text-xs peer-focus:text-[#FFD700] peer-valid:top-1 peer-valid:text-xs peer-valid:text-[#FFD700] pointer-events-none">Phone Number</label>
                 {registerPhoneError && <p className="mt-1 text-xs text-red-500">{registerPhoneError}</p>}
@@ -1113,7 +1113,7 @@ export default function Login({ isOpen, initialMode = "login", onClose, onSucces
                   placeholder=""
                   required
                   maxLength={15}
-                  className="w-full bg-[#121212] border border-[#2A2A2A] rounded-lg pl-11 pr-12 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-[#FFD700] transition-colors peer"
+                  className="input-modern w-full pl-11 pr-12 py-3 peer focus-modern"
                 />
                 <label className="absolute left-11 top-1/2 -translate-y-1/2 text-gray-400 transition-all duration-200 peer-focus:top-1 peer-focus:text-xs peer-focus:text-[#FFD700] peer-valid:top-1 peer-valid:text-xs peer-valid:text-[#FFD700] pointer-events-none">Password</label>
                 <button
@@ -1139,7 +1139,7 @@ export default function Login({ isOpen, initialMode = "login", onClose, onSucces
                   placeholder=""
                   required
                   maxLength={15}
-                  className="w-full bg-[#121212] border border-[#2A2A2A] rounded-lg pl-11 pr-12 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-[#FFD700] transition-colors peer"
+                  className="input-modern w-full pl-11 pr-12 py-3 peer focus-modern"
                 />
                 <label className="absolute left-11 top-1/2 -translate-y-1/2 text-gray-400 transition-all duration-200 peer-focus:top-1 peer-focus:text-xs peer-focus:text-[#FFD700] peer-valid:top-1 peer-valid:text-xs peer-valid:text-[#FFD700] pointer-events-none">Confirm Password</label>
                 <button
@@ -1157,7 +1157,7 @@ export default function Login({ isOpen, initialMode = "login", onClose, onSucces
                   value={registerReferralCode}
                   onChange={(e) => setRegisterReferralCode(e.target.value)}
                   placeholder=""
-                  className="w-full bg-[#121212] border border-[#2A2A2A] rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-[#FFD700] transition-colors peer"
+                  className="input-modern w-full px-4 py-3 peer focus-modern"
                 />
                 <label className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 transition-all duration-200 peer-focus:top-1 peer-focus:text-xs peer-focus:text-[#FFD700] peer-valid:top-1 peer-valid:text-xs peer-valid:text-[#FFD700] pointer-events-none">Referral Code (optional)</label>
               </div>

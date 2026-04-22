@@ -17,10 +17,10 @@ export function Deposit({ selectedDepositMethod, setSelectedDepositMethod, handl
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <button 
             onClick={() => setSelectedDepositMethod('Bank Transfer')}
-            className={`p-6 border rounded-lg transition-colors text-left ${
+            className={`card-modern p-6 transition-colors text-left cursor-pointer ${
               selectedDepositMethod === 'Bank Transfer'
-                ? 'bg-[#FFD700] text-[#121212] border-[#FFD700]'
-                : 'bg-[#1A1A1A] border-[#2A2A2A] hover:border-[#FFD700]'
+                ? 'bg-[#FFD700] text-[#121212] border-[#FFD700] shadow-glow'
+                : 'hover-lift'
             }`}
           >
             <div className="flex items-center gap-3 mb-2">

@@ -1,0 +1,601 @@
+// Modern Utility Classes
+// ======================
+
+// Glassmorphism Utilities
+// ------------------------
+.glass {
+  @include glass();
+}
+
+.glass-dark {
+  @include glass-dark();
+}
+
+.glass-modal {
+  @include glass-dark(0.95, 20px, 0.2);
+  border-color: rgba(255, 215, 0, 0.2);
+}
+
+// Modern Component Utilities
+// ---------------------------
+.modal-modern {
+  @include modal-overlay();
+}
+
+.modal-content-modern {
+  @include modal-content();
+}
+
+.card-modern {
+  @include card-modern();
+}
+
+.btn-modern {
+  @include button-modern('secondary');
+}
+
+.btn-primary {
+  @include button-modern('primary');
+}
+
+.btn-outline {
+  @include button-modern('outline');
+}
+
+.input-modern {
+  @include input-modern();
+}
+
+// Focus States
+// ------------
+.focus-modern {
+  @include focus-modern();
+}
+
+// Hover Effects
+// -------------
+.hover-lift {
+  @include hover-lift();
+}
+
+.hover-glow {
+  @include hover-glow();
+}
+
+// Scrollbar Utilities
+// -------------------
+.scrollbar-modern {
+  @include scrollbar-modern();
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+// Container Utilities
+// -------------------
+.container-modern {
+  @include container-responsive();
+}
+
+.container-sm {
+  @include container(map-get($containers, 'sm'));
+}
+
+.container-md {
+  @include container(map-get($containers, 'md'));
+}
+
+.container-lg {
+  @include container(map-get($containers, 'lg'));
+}
+
+.container-xl {
+  @include container(map-get($containers, 'xl'));
+}
+
+.container-full {
+  @include container(map-get($containers, 'full'));
+}
+
+// Flexbox Utilities
+// ------------------
+.flex-center {
+  @include flex-center();
+}
+
+.flex-between {
+  @include flex-between();
+}
+
+.flex-column {
+  @include flex-column();
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-inline {
+  display: inline-flex;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.flex-nowrap {
+  flex-wrap: nowrap;
+}
+
+.items-start {
+  align-items: flex-start;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.items-end {
+  align-items: flex-end;
+}
+
+.items-stretch {
+  align-items: stretch;
+}
+
+.justify-start {
+  justify-content: flex-start;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-end {
+  justify-content: flex-end;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.justify-around {
+  justify-content: space-around;
+}
+
+.justify-evenly {
+  justify-content: space-evenly;
+}
+
+// Position Utilities
+// ------------------
+.absolute-center {
+  @include absolute-center();
+}
+
+.absolute-full {
+  @include absolute-full();
+}
+
+.relative {
+  position: relative;
+}
+
+.absolute {
+  position: absolute;
+}
+
+.fixed {
+  position: fixed;
+}
+
+.sticky {
+  position: sticky;
+}
+
+// Typography Utilities
+// --------------------
+.text-gradient {
+  @include text-gradient();
+}
+
+.text-gradient-gold {
+  @include text-gradient(map-get($gradients, 'gold'));
+}
+
+.text-shadow {
+  @include text-shadow();
+}
+
+.text-responsive {
+  font-size: clamp(0.875rem, 2.5vw, 1.125rem);
+}
+
+.text-responsive-lg {
+  font-size: clamp(1.125rem, 3vw, 1.5rem);
+}
+
+.text-responsive-xl {
+  font-size: clamp(1.5rem, 4vw, 2rem);
+}
+
+// Truncation Utilities
+// --------------------
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.truncate-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.truncate-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+// Animation Utilities
+// -------------------
+.animate-fade-in {
+  @include fade-in();
+}
+
+.animate-slide-up {
+  @include slide-up();
+}
+
+.animate-slide-down {
+  @include slide-down();
+}
+
+.animate-glow {
+  animation: glow 2s ease-in-out infinite;
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-bounce {
+  animation: bounce 1s infinite;
+}
+
+// Loading States
+// --------------
+.loading-shimmer {
+  @include shimmer();
+}
+
+.loading-skeleton {
+  @include loading-skeleton();
+}
+
+// Status Colors
+// -------------
+.status-success {
+  color: map-get($colors, 'success');
+}
+
+.status-warning {
+  color: map-get($colors, 'warning');
+}
+
+.status-error {
+  color: map-get($colors, 'error');
+}
+
+.status-info {
+  color: map-get($colors, 'info');
+}
+
+.bg-success {
+  background-color: map-get($colors, 'success');
+}
+
+.bg-warning {
+  background-color: map-get($colors, 'warning');
+}
+
+.bg-error {
+  background-color: map-get($colors, 'error');
+}
+
+.bg-info {
+  background-color: map-get($colors, 'info');
+}
+
+// Form Validation
+// ---------------
+.input-error {
+  @include input-error();
+}
+
+.input-success {
+  @include input-success();
+}
+
+// Gradient Backgrounds
+// --------------------
+.bg-gradient-primary {
+  background: map-get($gradients, 'primary');
+}
+
+.bg-gradient-secondary {
+  background: map-get($gradients, 'secondary');
+}
+
+.bg-gradient-accent {
+  background: map-get($gradients, 'accent');
+}
+
+.bg-gradient-gold {
+  background: map-get($gradients, 'gold');
+}
+
+.bg-gradient-dark {
+  background: map-get($gradients, 'dark');
+}
+
+.bg-gradient-card {
+  background: map-get($gradients, 'card');
+}
+
+// Shadow Utilities
+// -----------------
+.shadow-glow {
+  box-shadow: map-get($shadows, 'glow');
+}
+
+.shadow-glow-lg {
+  box-shadow: map-get($shadows, 'glow-lg');
+}
+
+.shadow-glow-blue {
+  box-shadow: map-get($shadows, 'glow-blue');
+}
+
+.shadow-inner-modern {
+  box-shadow: map-get($shadows, 'inner');
+}
+
+// Border Radius Utilities
+// -----------------------
+.rounded-xs {
+  border-radius: map-get($radius, 'xs');
+}
+
+.rounded-sm {
+  border-radius: map-get($radius, 'sm');
+}
+
+.rounded-md {
+  border-radius: map-get($radius, 'md');
+}
+
+.rounded-lg {
+  border-radius: map-get($radius, 'lg');
+}
+
+.rounded-xl {
+  border-radius: map-get($radius, 'xl');
+}
+
+.rounded-2xl {
+  border-radius: map-get($radius, '2xl');
+}
+
+.rounded-3xl {
+  border-radius: map-get($radius, '3xl');
+}
+
+.rounded-full {
+  border-radius: map-get($radius, 'full');
+}
+
+// Spacing Utilities (Custom)
+// ---------------------------
+.space-y-1 > * + * {
+  margin-top: map-get($spacing, '1');
+}
+
+.space-y-2 > * + * {
+  margin-top: map-get($spacing, '2');
+}
+
+.space-y-3 > * + * {
+  margin-top: map-get($spacing, '3');
+}
+
+.space-y-4 > * + * {
+  margin-top: map-get($spacing, '4');
+}
+
+.space-y-6 > * + * {
+  margin-top: map-get($spacing, '6');
+}
+
+.space-y-8 > * + * {
+  margin-top: map-get($spacing, '8');
+}
+
+.space-x-1 > * + * {
+  margin-left: map-get($spacing, '1');
+}
+
+.space-x-2 > * + * {
+  margin-left: map-get($spacing, '2');
+}
+
+.space-x-3 > * + * {
+  margin-left: map-get($spacing, '3');
+}
+
+.space-x-4 > * + * {
+  margin-left: map-get($spacing, '4');
+}
+
+.space-x-6 > * + * {
+  margin-left: map-get($spacing, '6');
+}
+
+.space-x-8 > * + * {
+  margin-left: map-get($spacing, '8');
+}
+
+// Safe Area Utilities
+// -------------------
+.safe-area-top {
+  @include safe-area('top');
+}
+
+.safe-area-bottom {
+  @include safe-area('bottom');
+}
+
+.safe-area-left {
+  @include safe-area('left');
+}
+
+.safe-area-right {
+  @include safe-area('right');
+}
+
+.safe-area-all {
+  @include safe-area('all');
+}
+
+// Interactive States
+// ------------------
+.interactive {
+  cursor: pointer;
+  user-select: none;
+  transition: all map-get($transitions, 'fast');
+}
+
+.interactive:active {
+  transform: scale(0.98);
+}
+
+// Responsive Utilities
+// -------------------
+@media (max-width: map-get($breakpoints, 'sm')) {
+  .hide-sm {
+    display: none !important;
+  }
+  
+  .show-sm {
+    display: block !important;
+  }
+}
+
+@media (max-width: map-get($breakpoints, 'md')) {
+  .hide-md {
+    display: none !important;
+  }
+  
+  .show-md {
+    display: block !important;
+  }
+}
+
+@media (max-width: map-get($breakpoints, 'lg')) {
+  .hide-lg {
+    display: none !important;
+  }
+  
+  .show-lg {
+    display: block !important;
+  }
+}
+
+@media (max-width: map-get($breakpoints, 'xl')) {
+  .hide-xl {
+    display: none !important;
+  }
+  
+  .show-xl {
+    display: block !important;
+  }
+}
+
+// Print Utilities
+// ---------------
+@media print {
+  .print-hidden {
+    display: none !important;
+  }
+  
+  .print-visible {
+    display: block !important;
+  }
+}
+
+// Accessibility Utilities
+// ------------------------
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.focus-visible:focus {
+  outline: 2px solid map-get($colors, 'primary');
+  outline-offset: 2px;
+}
+
+// Custom Scrollbar for WebKit
+// ----------------------------
+.webkit-scrollbar {
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+}
+
+// Modern Selection
+// ----------------
+::selection {
+  background: rgba(255, 215, 0, 0.3);
+  color: map-get($colors, 'text-primary');
+}
+
+::-moz-selection {
+  background: rgba(255, 215, 0, 0.3);
+  color: map-get($colors, 'text-primary');
+}

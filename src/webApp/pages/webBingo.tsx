@@ -1,10 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import { WifiOff, RefreshCw, AlertCircle, CheckCircle, Loader2, Maximize2, Minimize2, Wallet, EyeOff } from "lucide-react";
-import { useAuth } from "../../contexts/UserContext";
-import Login from "./Login";
-import axios from "axios";
+import { useWebAuth } from "../../contexts/webUserContext";
+import WebLogin from "./webLogin";
 
-interface BingoConnectionStatus {
+interface WebBingoConnectionStatus {
   isConnected: boolean;
   isBingoFrontendAvailable: boolean;
   isBackendAvailable: boolean;
@@ -13,22 +12,21 @@ interface BingoConnectionStatus {
   lastChecked: Date;
 }
 
-interface BingoPlayerData {
+interface WebBingoPlayerData {
   playerId: number;
   balance: number;
   withdrawable: number;
   non_withdrawable: number;
   bonus_balance: number;
   timestamp: string;
-  token?: string;
 }
 
-export default function Bingo() {
-  const { state: authState } = useAuth();
+export default function WebBingo() {
+  const { user, isAuthenticated } = useWebAuth();
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const gameContainerRef = useRef<HTMLDivElement>(null);
   const balanceDetailsRef = useRef<HTMLDivElement>(null);
-  const [connectionStatus, setConnectionStatus] = useState<BingoConnectionStatus>({
+  const [connectionStatus, setConnectionStatus] = useState<WebBingoConnectionStatus>({
     isConnected: false,
     isBingoFrontendAvailable: false,
     isBackendAvailable: false,
@@ -36,13 +34,13 @@ export default function Bingo() {
     message: "Checking connections...",
     lastChecked: new Date()
   });
-  const [playerData, setPlayerData] = useState<BingoPlayerData | null>(null);
+  const [playerData, setPlayerData] = useState<WebBingoPlayerData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [showBalanceDetails, setShowBalanceDetails] = useState(false);
-  
+
   const smartBetIntegrationEnabled = Boolean(import.meta.env.VITE_BIGSERVER_URL);
   const bingoFrontendUrl = import.meta.env.VITE_BINGO_FRONT_URL || 'http://localhost:5173';
   const bingoFrontendOrigin = (() => {
@@ -57,18 +55,18 @@ export default function Bingo() {
   // Check bingo frontend availability
   const checkBingoFrontend = async (): Promise<boolean> => {
     try {
-      await fetch(bingoFrontendUrl, { 
+      await fetch(bingoFrontendUrl, {
         method: 'HEAD',
         mode: 'no-cors',
-        cache: 'no-cache'
+        cache: 'no-cache',
       });
       return true;
     } catch (error) {
       // Try to ping the bigserver instead since CORS might block direct access
       try {
         const bigServerUrl = import.meta.env.VITE_BIGSERVER_URL || 'http://localhost:3000';
-        const bigServerResponse = await axios.get(`${bigServerUrl}/public-health`, { timeout: 3000 });
-        return bigServerResponse.status === 200;
+        const bigServerResponse = await fetch(`${bigServerUrl}/public-health`, { timeout: 3000 });
+        return bigServerResponse.ok;
       } catch (bigServerError) {
         return false;
       }
@@ -78,8 +76,8 @@ export default function Bingo() {
   // Check backend availability
   const checkBackend = async (): Promise<boolean> => {
     try {
-      const response = await axios.get('http://localhost:5000/health', { timeout: 3000 });
-      return response.status === 200;
+      const response = await fetch('http://localhost:5000/health', { timeout: 3000 });
+      return response.ok;
     } catch (error) {
       return false;
     }
@@ -97,8 +95,8 @@ export default function Bingo() {
         return false;
       }
 
-      const response = await axios.get(`${bigServerUrl}/public-health`, { timeout: 3000 });
-      return response.status === 200;
+      const response = await fetch(`${bigServerUrl}/public-health`, { timeout: 3000 });
+      return response.ok;
     } catch (error) {
       return false;
     }
@@ -107,20 +105,21 @@ export default function Bingo() {
   // Send player data to backend
   const sendPlayerToBackend = async (playerData: any) => {
     try {
-      const response = await axios.post('http://localhost:5000/api/bingo/player-connect', {
-        playerId: playerData.id,
-        username: playerData.username,
-        phone_number: playerData.phone_number,
-        source: 'smart_bet_bingo_page'
-      }, {
+      const response = await fetch('http://localhost:5000/api/bingo/player-connect', {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        timeout: 5000
+        body: JSON.stringify({
+          playerId: playerData.id,
+          username: playerData.username,
+          phone_number: playerData.phone_number,
+          source: 'smart_bet_web_bingo_page'
+        })
       });
-      
-      console.log('✅ Player data sent to backend:', response.data);
-      return response.data;
+
+      console.log('✅ Player data sent to backend:', await response.json());
+      return response.ok;
     } catch (error: any) {
       console.error('❌ Failed to send player data to backend:', error.message);
       throw error;
@@ -131,7 +130,7 @@ export default function Bingo() {
   const checkConnectionsAndInitialize = async () => {
     setIsLoading(true);
     setError(null);
-    
+
     try {
       // Check all services
       const [bingoAvailable, backendAvailable, bigServerAvailable] = await Promise.all([
@@ -144,7 +143,7 @@ export default function Bingo() {
         ? bingoAvailable && backendAvailable && bigServerAvailable
         : bingoAvailable && backendAvailable;
 
-      const newStatus: BingoConnectionStatus = {
+      const newStatus: WebBingoConnectionStatus = {
         isConnected: connected,
         isBingoFrontendAvailable: bingoAvailable,
         isBackendAvailable: backendAvailable,
@@ -171,29 +170,28 @@ export default function Bingo() {
       setConnectionStatus(newStatus);
 
       // If user is authenticated and all services are available
-      if (authState.isAuthenticated && authState.user) {
+      if (isAuthenticated && user) {
         setPlayerData({
-          playerId: authState.user.id,
-          balance: authState.user.balance,
-          withdrawable: authState.user.withdrawable,
-          non_withdrawable: authState.user.non_withdrawable,
-          bonus_balance: authState.user.bonus_balance,
-          timestamp: new Date().toISOString(),
-          token: authState.tokens?.accessToken || authState.tokens?.token
+          playerId: user.id,
+          balance: user.balance,
+          withdrawable: user.withdrawable,
+          non_withdrawable: user.non_withdrawable,
+          bonus_balance: user.bonus_balance,
+          timestamp: new Date().toISOString()
         });
 
         if (smartBetIntegrationEnabled && newStatus.isConnected) {
           try {
             // Send player data to backend
-            await sendPlayerToBackend(authState.user);
-            console.log('🎯 Player data initialized for bingo:', authState.user.username);
+            await sendPlayerToBackend(user);
+            console.log('🎯 Player data initialized for bingo:', user.username);
           } catch (error: any) {
             setError(`Failed to initialize player data: ${error.message}`);
           }
         } else if (!smartBetIntegrationEnabled) {
           console.log('⚠️ Smart Bet integration disabled: player data will not be synced to backend.');
         }
-      } else if (!authState.isAuthenticated && newStatus.isConnected) {
+      } else if (!isAuthenticated && newStatus.isConnected) {
         setError("Please log in to play bingo games.");
       }
 
@@ -239,15 +237,15 @@ export default function Bingo() {
           break;
         
         case 'balance_update_request':
-          if (authState.user) {
+          if (user) {
             sendToBingoIframe({
               type: 'balance_update',
               data: {
-                playerId: authState.user.id,
-                balance: authState.user.balance,
-                withdrawable: authState.user.withdrawable,
-                non_withdrawable: authState.user.non_withdrawable,
-                bonus_balance: authState.user.bonus_balance
+                playerId: user.id,
+                balance: user.balance,
+                withdrawable: user.withdrawable,
+                non_withdrawable: user.non_withdrawable,
+                bonus_balance: user.bonus_balance
               }
             }, false); // Don't require full integration for balance updates
           }
@@ -267,17 +265,15 @@ export default function Bingo() {
 
     window.addEventListener('message', handleMessage);
     return () => window.removeEventListener('message', handleMessage);
-  }, [playerData, authState.user, bingoFrontendOrigin]);
-
-  // Check connections on component mount and set up interval
+  }, [playerData, user, bingoFrontendOrigin]);
   useEffect(() => {
     checkConnectionsAndInitialize();
-    
+
     // Check connections every 30 seconds
     const interval = setInterval(checkConnectionsAndInitialize, 30000);
-    
+
     return () => clearInterval(interval);
-  }, [authState.isAuthenticated, authState.user]);
+  }, [isAuthenticated, user]);
 
   // Send player data to iframe when it changes
   useEffect(() => {
@@ -351,15 +347,15 @@ export default function Bingo() {
             <h2 className="text-2xl font-bold text-white mb-4">Connection Error</h2>
             <p className="text-gray-400 mb-6">{error}</p>
             <button
-              onClick={authState.isAuthenticated ? checkConnectionsAndInitialize : () => setShowLoginModal(true)}
+              onClick={isAuthenticated ? checkConnectionsAndInitialize : () => setShowLoginModal(true)}
               className="bg-red-500 hover:bg-red-600 text-white font-semibold px-6 py-3 rounded-lg transition-colors flex items-center gap-2 mx-auto"
             >
               <RefreshCw className="w-4 h-4" />
-              {authState.isAuthenticated ? 'Retry Connection' : 'Login'}
+              {isAuthenticated ? 'Retry Connection' : 'Login'}
             </button>
           </div>
         </div>
-        <Login
+        <WebLogin
           isOpen={showLoginModal}
           initialMode="login"
           onClose={() => setShowLoginModal(false)}
@@ -389,7 +385,7 @@ export default function Bingo() {
                 {connectionStatus.isConnected ? "Connected" : "Disconnected"}
               </span>
             </div>
-            
+
             <div className="flex items-center gap-2">
               {connectionStatus.isBingoFrontendAvailable ? (
                 <CheckCircle className="w-4 h-4 text-green-400" />
@@ -398,7 +394,7 @@ export default function Bingo() {
               )}
               <span className="text-sm text-gray-300">Bingo Frontend</span>
             </div>
-            
+
             <div className="flex items-center gap-2">
               {connectionStatus.isBackendAvailable ? (
                 <CheckCircle className="w-4 h-4 text-green-400" />
@@ -407,7 +403,7 @@ export default function Bingo() {
               )}
               <span className="text-sm text-gray-300">Backend</span>
             </div>
-            
+
             <div className="flex items-center gap-2">
               {connectionStatus.isBigServerAvailable ? (
                 <CheckCircle className="w-5 h-5 text-green-400" />
@@ -417,7 +413,7 @@ export default function Bingo() {
               <span className="text-sm text-gray-300">Big Server</span>
             </div>
           </div>
-          
+
           <div className="flex items-center gap-3">
             <span className="text-sm text-gray-400">{connectionStatus.message}</span>
             <button
@@ -450,13 +446,13 @@ export default function Bingo() {
       )}
 
       {/* Player Info Bar */}
-      {authState.isAuthenticated && authState.user && playerData && (
+      {isAuthenticated && user && playerData && (
         <div className="bg-gray-800 rounded-lg p-4 mb-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <div>
                 <span className="text-sm text-gray-400">Player:</span>
-                <span className="ml-2 text-white font-semibold">{authState.user.username}</span>
+                <span className="ml-2 text-white font-semibold">{user.username}</span>
               </div>
               <div>
                 <span className="text-sm text-gray-400">Balance:</span>
@@ -476,18 +472,18 @@ export default function Bingo() {
           <div className="bg-gray-700 px-4 py-2 flex items-center justify-between">
             <div className="flex items-center gap-4">
               <h3 className="text-white font-semibold">Bingo Game</h3>
-              {isFullScreen && authState.isAuthenticated && authState.user && (
+              {isFullScreen && isAuthenticated && user && (
                 <div className="relative flex items-start gap-4">
                   <div className="relative">
-                    <button 
+                    <button
                       onClick={() => setShowBalanceDetails(prev => !prev)}
-                      className="card-modern flex items-center gap-4 px-4 py-2 cursor-pointer hover-lift"
+                      className="flex items-center gap-4 bg-[#121212] rounded-lg px-4 py-2 border border-[#2A2A2A] hover:border-[#FFD700] transition-colors cursor-pointer"
                     >
                       <div className="flex items-center gap-2">
                         <Wallet className="w-4 h-4 text-[#FFD700]" />
                         <div className="text-left">
-                          <div className="text-xs text-gray-400">Total Balance</div>
-                          <div className="text-sm font-semibold text-white">${authState.user.balance.toFixed(2)}</div>
+                          <div className="text-xs text-gray-400 mb-1">Total Balance</div>
+                          <div className="text-sm font-semibold text-white">${user.balance.toFixed(2)}</div>
                         </div>
                       </div>
                       <span className="text-gray-400 hover:text-white cursor-pointer" role="button" aria-label="Hide balance">
@@ -510,7 +506,7 @@ export default function Bingo() {
                           <div className="flex items-center justify-between">
                             <div>
                               <div className="text-xs text-gray-400">Main Balance</div>
-                              <div className="text-sm font-semibold text-white">${authState.user.balance.toFixed(2)}</div>
+                              <div className="text-sm font-semibold text-white">${user.balance.toFixed(2)}</div>
                             </div>
                             <div className="w-2 h-2 rounded-full bg-blue-500" />
                           </div>
@@ -518,21 +514,21 @@ export default function Bingo() {
                           <div className="flex items-center justify-between">
                             <div>
                               <div className="text-xs text-gray-400">Non-Withdrawable</div>
-                              <div className="text-sm font-semibold text-white">${authState.user.non_withdrawable.toFixed(2)}</div>
+                              <div className="text-sm font-semibold text-white">${user.non_withdrawable.toFixed(2)}</div>
                             </div>
                             <div className="w-2 h-2 rounded-full bg-green-500" />
                           </div>
                           <div className="flex items-center justify-between">
                             <div>
                               <div className="text-xs text-gray-400">Bonus Balance</div>
-                              <div className="text-sm font-semibold text-[#FFD700]">${authState.user.bonus_balance.toFixed(2)}</div>
+                              <div className="text-sm font-semibold text-[#FFD700]">${user.bonus_balance.toFixed(2)}</div>
                             </div>
                             <div className="w-2 h-2 rounded-full bg-[#FFD700]" />
                           </div>
                           <div className="flex items-center justify-between">
                             <div>
                               <div className="text-xs text-gray-400">Withdrawable</div>
-                              <div className="text-sm font-semibold text-green-400">${authState.user.withdrawable.toFixed(2)}</div>
+                              <div className="text-sm font-semibold text-green-400">${user.withdrawable.toFixed(2)}</div>
                             </div>
                             <div className="w-2 h-2 rounded-full bg-green-400" />
                           </div>
@@ -541,7 +537,7 @@ export default function Bingo() {
                     )}
                   </div>
 
-                  <span className="hidden md:inline text-sm text-white">{authState.user.username}</span>
+                  <span className="hidden md:inline text-sm text-white">{user.username}</span>
                 </div>
               )}
               <span className="text-sm text-gray-400">http://localhost:5173</span>
@@ -565,7 +561,7 @@ export default function Bingo() {
               </button>
             </div>
           </div>
-          
+
           <div className="relative" style={{ height: '600px' }}>
             <iframe
               ref={iframeRef}
@@ -598,41 +594,18 @@ export default function Bingo() {
             <WifiOff className="w-16 h-16 text-yellow-400 mx-auto mb-6" />
             <h2 className="text-2xl font-bold text-white mb-4">Bingo Game Unavailable</h2>
             <p className="text-gray-400 mb-6">
-              The bingo game server is currently not responding. Please check your connection and try again later.
+              The bingo game server is currently unavailable. Please try again later or contact support if the problem persists.
             </p>
-            <div className="space-y-3">
-              <div className="text-left bg-gray-800 rounded p-3">
-                <div className="flex items-center gap-2 mb-2">
-                  <WifiOff className="w-4 h-4 text-red-400" />
-                  <span className="text-sm text-white">Troubleshooting:</span>
-                </div>
-                <ul className="text-xs text-gray-400 space-y-1">
-                  <li>• Check if bingo-0gwl.onrender.com is accessible</li>
-                  <li>• Ensure bingo frontend service is deployed</li>
-                  <li>• Verify backend and bigserver are online</li>
-                  <li>• Check your network connection</li>
-                </ul>
-              </div>
-              <button
-                onClick={checkConnectionsAndInitialize}
-                className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold px-6 py-3 rounded-lg transition-colors flex items-center gap-2 mx-auto"
-              >
-                <RefreshCw className="w-4 h-4" />
-                Check Again
-              </button>
-            </div>
+            <button
+              onClick={checkConnectionsAndInitialize}
+              className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-semibold px-6 py-3 rounded-lg transition-colors flex items-center gap-2 mx-auto"
+            >
+              <RefreshCw className="w-4 h-4" />
+              Retry Connection
+            </button>
           </div>
         </div>
       )}
-      <Login
-        isOpen={showLoginModal}
-        initialMode="login"
-        onClose={() => setShowLoginModal(false)}
-        onSuccess={() => {
-          setShowLoginModal(false);
-          checkConnectionsAndInitialize();
-        }}
-      />
     </div>
   );
 }

@@ -110,7 +110,7 @@ export function WalletModal({ isOpen, onClose, phoneNumber }: WalletModalProps) 
       {/* Modal */}
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
         <div 
-          className="bg-[#121212] w-full max-w-5xl rounded-2xl border border-[#2A2A2A] shadow-xl overflow-hidden max-h-[90vh] overflow-y-auto pointer-events-auto"
+          className="modal-modern w-full max-w-5xl overflow-hidden max-h-[90vh] overflow-y-auto pointer-events-auto"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="flex items-center justify-between p-4 border-b border-[#2A2A2A]">
@@ -239,7 +239,7 @@ export function WalletModal({ isOpen, onClose, phoneNumber }: WalletModalProps) 
       {/* Coming Soon Modal */}
       {showComingSoonModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4">
-          <div className="bg-[#121212] w-full max-w-md rounded-2xl border border-[#2A2A2A] shadow-xl p-6">
+          <div className="modal-modern w-full max-w-md p-6">
             <div className="text-center space-y-4">
               <div className="w-16 h-16 bg-[#FFD700] rounded-full flex items-center justify-center mx-auto">
                 <CreditCard className="w-8 h-8 text-[#121212]" />
@@ -321,7 +321,7 @@ export function WalletModal({ isOpen, onClose, phoneNumber }: WalletModalProps) 
 function VoucherModal({ isOpen, onClose, voucherCode, setVoucherCode, onDeposit, message, showMessage, setShowMessage }: any) {
   return isOpen ? (
     <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 p-4" onClick={onClose}>
-      <div onClick={(e) => e.stopPropagation()} className="bg-[#121212] w-full max-w-md rounded-2xl border border-[#2A2A2A] shadow-xl p-6">
+      <div onClick={(e) => e.stopPropagation()} className="modal-modern w-full max-w-md p-6">
         <div className="space-y-6">
           <div className="flex items-center justify-between">
             <div className="text-center flex-1">
@@ -343,7 +343,7 @@ function VoucherModal({ isOpen, onClose, voucherCode, setVoucherCode, onDeposit,
               value={voucherCode}
               onChange={(e) => setVoucherCode(e.target.value)}
               placeholder="Enter voucher code"
-              className="w-full bg-[#1A1A1A] border border-[#2A2A2A] rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-[#FFD700]"
+              className="input-modern w-full px-4 py-3 focus-modern"
             />
           </div>
 
@@ -381,7 +381,7 @@ function VoucherModal({ isOpen, onClose, voucherCode, setVoucherCode, onDeposit,
 function VoucherWithdrawModal({ isOpen, onClose, withdrawAmount, setWithdrawAmount, onWithdraw, message, showMessage, setShowMessage, voucherCodeDisplay }: any) {
   return isOpen ? (
     <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 p-4" onClick={onClose}>
-      <div onClick={(e) => e.stopPropagation()} className="bg-[#121212] w-full max-w-md rounded-2xl border border-[#2A2A2A] shadow-xl p-6">
+      <div onClick={(e) => e.stopPropagation()} className="modal-modern w-full max-w-md p-6">
         <div className="space-y-6">
           <div className="flex items-center justify-between">
             <div className="text-center flex-1">
@@ -418,7 +418,7 @@ function VoucherWithdrawModal({ isOpen, onClose, withdrawAmount, setWithdrawAmou
               value={withdrawAmount}
               onChange={(e) => setWithdrawAmount(e.target.value)}
               placeholder="Enter custom amount"
-              className="w-full bg-[#1A1A1A] border border-[#2A2A2A] rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-[#FFD700]"
+              className="input-modern w-full px-4 py-3 focus-modern"
             />
           </div>
 
@@ -465,7 +465,7 @@ function VoucherWithdrawModal({ isOpen, onClose, withdrawAmount, setWithdrawAmou
 function CashoutAgentModal({ isOpen, onClose, cashoutAmount, setCashoutAmount, onCashout, message, showMessage, setShowMessage }: any) {
   return isOpen ? (
     <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 p-4" onClick={onClose}>
-      <div onClick={(e) => e.stopPropagation()} className="bg-[#121212] w-full max-w-md rounded-2xl border border-[#2A2A2A] shadow-xl p-6">
+      <div onClick={(e) => e.stopPropagation()} className="modal-modern w-full max-w-md p-6">
         <div className="space-y-6">
           <div className="flex items-center justify-between">
             <div className="text-center flex-1">
@@ -502,7 +502,7 @@ function CashoutAgentModal({ isOpen, onClose, cashoutAmount, setCashoutAmount, o
               value={cashoutAmount}
               onChange={(e) => setCashoutAmount(e.target.value)}
               placeholder="Enter custom amount"
-              className="w-full px-4 py-3 bg-[#1A1A1A] border border-[#2A2A2A] rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-[#FFD700]"
+              className="input-modern w-full px-4 py-3 focus-modern"
               min="50"
               max="5000"
             />

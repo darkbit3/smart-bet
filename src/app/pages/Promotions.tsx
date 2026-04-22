@@ -56,16 +56,16 @@ export default function Promotions() {
             Compete in our biggest tournament yet. Top 100 players win prizes!
           </p>
           <div className="flex items-center gap-4 mb-6">
-            <div className="bg-[#121212]/50 backdrop-blur-sm rounded-lg px-4 py-2">
+            <div className="glass rounded-lg px-4 py-2">
               <div className="text-xs text-gray-400">Time Remaining</div>
               <div className="text-2xl font-bold text-white">5d 12h 34m</div>
             </div>
-            <div className="bg-[#121212]/50 backdrop-blur-sm rounded-lg px-4 py-2">
+            <div className="glass rounded-lg px-4 py-2">
               <div className="text-xs text-gray-400">Prize Pool</div>
               <div className="text-2xl font-bold text-[#FFD700]">$50,000</div>
             </div>
           </div>
-          <button className="bg-[#FFD700] text-[#121212] px-8 py-3 rounded-xl font-bold hover:bg-[#FFC700] transition-colors text-lg">
+          <button className="btn-modern px-8 py-3 rounded-xl font-bold text-lg">
             Join Tournament
           </button>
         </div>
@@ -93,7 +93,7 @@ export default function Promotions() {
                 <h3 className="text-2xl font-bold text-white mb-2">{promo.title}</h3>
                 <p className="text-xl text-[#FFD700] mb-3 font-semibold">{promo.description}</p>
                 <p className="text-gray-400 mb-6">{promo.details}</p>
-                <button className="w-full bg-[#121212] hover:bg-[#FFD700] hover:text-[#121212] text-white py-3 rounded-xl font-semibold border border-[#2A2A2A] transition-all">
+                <button className="btn-modern w-full py-3 rounded-xl font-semibold">
                   Claim Bonus
                 </button>
               </div>

@@ -242,7 +242,7 @@ export default function Profile() {
                 <Award className="w-4 h-4" />
                 VIP Gold
               </div>
-              <div className="bg-[#121212]/50 text-gray-300 px-4 py-1.5 rounded-full text-sm">
+              <div className="glass text-gray-300 px-4 py-1.5 rounded-full text-sm">
                 Level 12
               </div>
             </div>
@@ -359,9 +359,9 @@ export default function Profile() {
             return (
               <button
                 key={index}
-                className="w-full bg-[#1A1A1A] hover:bg-[#2A2A2A] border border-[#2A2A2A] rounded-xl p-4 flex items-center gap-4 transition-all group hover:border-[#FFD700]"
+                className="card-modern w-full p-4 flex items-center gap-4 transition-all group cursor-pointer hover-lift"
               >
-                <div className="w-12 h-12 rounded-lg bg-[#121212] flex items-center justify-center group-hover:bg-[#FFD700] transition-colors">
+                <div className="card-modern w-12 h-12 flex items-center justify-center group-hover:bg-[#FFD700] transition-colors">
                   <Icon className="w-6 h-6 text-[#FFD700] group-hover:text-[#121212]" />
                 </div>
                 <div className="flex-1 text-left">
@@ -431,7 +431,7 @@ export default function Profile() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4" onClick={() => setIsEditModalOpen(false)}>
           <div 
             onClick={(e) => e.stopPropagation()} 
-            className="bg-[#121212] w-full max-w-md rounded-2xl border border-[#2A2A2A] shadow-xl p-6"
+            className="modal-modern w-full max-w-md p-6"
           >
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-bold text-white">Edit Profile</h2>
@@ -504,7 +504,7 @@ export default function Profile() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4" onClick={() => setShowFullHistory(false)}>
           <div 
             onClick={(e) => e.stopPropagation()} 
-            className="bg-[#121212] w-full max-w-6xl max-h-[90vh] overflow-y-auto rounded-2xl border border-[#2A2A2A] shadow-xl"
+            className="modal-modern w-full max-w-6xl max-h-[90vh] overflow-y-auto"
           >
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-bold text-white flex items-center gap-2">
