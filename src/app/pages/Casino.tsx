@@ -1,4 +1,4 @@
-﻿import { GameTile } from "../components/GameTile";
+import { GameTile } from "../components/GameTile";
 import { JackpotTicker } from "../components/JackpotTicker";
 import { HeroCarousel } from "../components/HeroCarousel";
 import { Search, TrendingUp, Flame, Sparkles, Zap } from "lucide-react";
