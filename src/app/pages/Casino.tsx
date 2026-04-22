@@ -1,4 +1,4 @@
-﻿import { GameTile } from "../components/GameTile";
+import { GameTile } from "../components/GameTile";
 import { JackpotTicker } from "../components/JackpotTicker";
 import { HeroCarousel } from "../components/HeroCarousel";
 import { Search, TrendingUp, Flame, Sparkles, Zap } from "lucide-react";
@@ -176,7 +176,7 @@ export default function Casino() {
                             window.location.href = 'http://localhost:5173';
                           }
                         }}
-                        className="bg-[#FFD700] text-[#121212] px-6 py-3 rounded-lg font-semibold flex items-center gap-2 hover:bg-[#FFC700] transition-colors"
+                        className="bg-primary text-primary-foreground px-6 py-3 rounded-lg font-semibold flex items-center gap-2 hover:bg-primary-dark transition-colors shadow-md hover:shadow-lg"
                       >
                         Play Now
                       </button>
@@ -187,12 +187,12 @@ export default function Casino() {
                   <div className="p-3">
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex-1">
-                        <h3 className="text-white font-semibold text-sm mb-1">{game.title}</h3>
-                        <p className="text-gray-400 text-xs">{game.provider}</p>
+                        <h3 className="text-foreground font-semibold text-sm mb-1">{game.title}</h3>
+                        <p className="text-muted-foreground text-xs">{game.provider}</p>
                       </div>
                       <div className="flex gap-1">
                         {game.isFeatured && (
-                          <span className="bg-[#FFD700]/20 text-[#FFD700] text-xs px-2 py-1 rounded-full font-semibold">
+                          <span className="bg-primary/20 text-primary text-xs px-2 py-1 rounded-full font-semibold">
                             Featured
                           </span>
                         )}

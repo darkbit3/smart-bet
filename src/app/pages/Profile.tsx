@@ -44,9 +44,9 @@ export default function Profile() {
   }, [isAuthenticated]);
 
   const stats = [
-    { label: "Total Wagered", value: "$12,847.50", icon: Wallet, color: "text-[#FFD700]" },
-    { label: "Total Won", value: "$8,542.30", icon: Award, color: "text-green-500" },
-    { label: "Bets Placed", value: "1,247", icon: History, color: "text-blue-500" },
+    { label: "Total Wagered", value: "$12,847.50", icon: Wallet, color: "text-primary" },
+    { label: "Total Won", value: "$8,542.30", icon: Award, color: "text-success" },
+    { label: "Bets Placed", value: "1,247", icon: History, color: "text-info" },
     { label: "Win Rate", value: "58.3%", icon: Award, color: "text-purple-500" },
   ];
 
@@ -228,28 +228,28 @@ export default function Profile() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-6">
       {/* Profile Header */}
-      <div className="mb-8 bg-gradient-to-r from-[#FFD700]/20 to-[#FFA500]/20 border border-[#FFD700]/30 rounded-2xl p-6 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-[#FFD700]/10 rounded-full blur-3xl" />
+      <div className="mb-8 bg-gradient-to-r from-primary/20 to-orange-500/20 border border-primary/30 rounded-2xl p-6 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-3xl" />
         <div className="relative z-10 flex items-center gap-6">
-          <div className="w-24 h-24 rounded-full bg-gradient-to-br from-[#FFD700] to-[#FFA500] flex items-center justify-center text-4xl font-bold text-[#121212]">
+          <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary to-orange-500 flex items-center justify-center text-4xl font-bold text-primary-foreground">
             {getUserInitials()}
           </div>
           <div className="flex-1">
-            <h1 className="text-3xl font-bold text-white mb-1">{user?.username || "Guest"}</h1>
-            <p className="text-gray-300 mb-3">{getMemberSince()}</p>
+            <h1 className="text-3xl font-bold text-foreground mb-1">{user?.username || "Guest"}</h1>
+            <p className="text-muted-foreground mb-3">{getMemberSince()}</p>
             <div className="flex items-center gap-3">
               <div className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-4 py-1.5 rounded-full text-sm font-bold flex items-center gap-2">
                 <Award className="w-4 h-4" />
                 VIP Gold
               </div>
-              <div className="glass text-gray-300 px-4 py-1.5 rounded-full text-sm">
+              <div className="bg-muted/50 text-muted-foreground px-4 py-1.5 rounded-full text-sm">
                 Level 12
               </div>
             </div>
           </div>
           <button 
             onClick={handleEditProfile}
-            className="bg-[#FFD700] text-[#121212] px-6 py-2.5 rounded-xl font-semibold hover:bg-[#FFC700] transition-colors flex items-center gap-2"
+            className="bg-primary text-primary-foreground px-6 py-2.5 rounded-xl font-semibold hover:bg-primary-dark transition-colors flex items-center gap-2 shadow-md hover:shadow-lg"
           >
             <Edit2 className="w-4 h-4" />
             Edit Profile

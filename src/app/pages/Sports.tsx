@@ -47,7 +47,7 @@ export default function Sports() {
             {/* Main Icons */}
             <div className="flex justify-center mb-6">
               <div className="relative">
-                <Trophy className="w-24 h-24 text-[#FFD700] animate-bounce" />
+                <Trophy className="w-24 h-24 text-primary animate-bounce" />
                 <div className="absolute -top-2 -right-2">
                   <Zap className="w-8 h-8 text-yellow-400 animate-pulse" />
                 </div>
@@ -55,23 +55,23 @@ export default function Sports() {
             </div>
 
             {/* Coming Soon Text */}
-            <h1 className="text-5xl md:text-6xl font-bold text-white mb-4">
+            <h1 className="text-5xl md:text-6xl font-bold text-foreground mb-4">
               <span className="bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent">
                 Coming Soon
               </span>
             </h1>
             
-            <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+            <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
               Get ready for the ultimate sports betting experience! We're working hard to bring you live sports betting with real-time odds and exciting features.
             </p>
 
             {/* Loading Progress Bar */}
             <div className="max-w-md mx-auto mb-8">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm text-gray-400">Launching Progress</span>
-                <span className="text-sm text-[#FFD700] font-semibold">{loadingProgress}%</span>
+                <span className="text-sm text-muted-foreground">Launching Progress</span>
+                <span className="text-sm text-primary font-semibold">{loadingProgress}%</span>
               </div>
-              <div className="w-full bg-[#1A1A1A] rounded-full h-3 overflow-hidden">
+              <div className="w-full bg-secondary rounded-full h-3 overflow-hidden">
                 <div 
                   className="h-full bg-gradient-to-r from-red-500 to-orange-500 rounded-full transition-all duration-300 ease-out"
                   style={{ width: `${loadingProgress}%` }}
@@ -85,7 +85,7 @@ export default function Sports() {
             <div className="mb-8">
               <div className="flex items-center justify-center gap-3 text-lg">
                 <Activity className="w-6 h-6 text-red-500 animate-spin" />
-                <span className="text-white font-semibold">{features[currentFeature]}</span>
+                <span className="text-foreground font-semibold">{features[currentFeature]}</span>
                 <TrendingUp className="w-6 h-6 text-orange-500 animate-pulse" />
               </div>
             </div>
@@ -118,13 +118,13 @@ export default function Sports() {
             return (
               <div
                 key={index}
-                className={`bg-[#1A1A1A] border border-[#2A2A2A] rounded-xl p-6 hover:border-[#FFD700] transition-all duration-300 hover:scale-105 ${feature.delay}`}
+                className={`bg-card border border-border rounded-xl p-6 hover:border-primary transition-all duration-300 hover:scale-105 ${feature.delay}`}
               >
                 <div className="w-16 h-16 bg-gradient-to-r from-red-500/20 to-orange-500/20 rounded-xl flex items-center justify-center mb-4 mx-auto">
-                  <Icon className="w-8 h-8 text-[#FFD700]" />
+                  <Icon className="w-8 h-8 text-primary" />
                 </div>
-                <h3 className="text-lg font-semibold text-white mb-2">{feature.title}</h3>
-                <p className="text-gray-400 text-sm">{feature.description}</p>
+                <h3 className="text-lg font-semibold text-foreground mb-2">{feature.title}</h3>
+                <p className="text-muted-foreground text-sm">{feature.description}</p>
               </div>
             );
           })}

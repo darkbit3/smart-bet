@@ -7,7 +7,7 @@ export default function Promotions() {
       description: "100% match up to $1,000",
       details: "Deposit and get double your money to play with",
       badge: "NEW USERS",
-      color: "from-[#FFD700] to-[#FFA500]",
+      color: "from-primary to-orange-500",
       icon: Gift,
     },
     {
@@ -40,29 +40,29 @@ export default function Promotions() {
     <div className="max-w-7xl mx-auto px-4 py-6">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-white mb-2">Promotions & Bonuses</h1>
-        <p className="text-gray-400">Maximize your winnings with our exclusive offers</p>
+        <h1 className="text-3xl font-bold text-foreground mb-2">Promotions & Bonuses</h1>
+        <p className="text-muted-foreground">Maximize your winnings with our exclusive offers</p>
       </div>
 
       {/* Featured Promo */}
-      <div className="mb-8 bg-gradient-to-r from-[#FFD700]/20 to-[#FFA500]/20 border border-[#FFD700]/30 rounded-2xl p-8 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-[#FFD700]/10 rounded-full blur-3xl" />
+      <div className="mb-8 bg-gradient-to-r from-primary/20 to-orange-500/20 border border-primary/30 rounded-2xl p-8 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
         <div className="relative z-10">
-          <div className="inline-block bg-[#FFD700] text-[#121212] px-3 py-1 rounded-full text-xs font-bold mb-4">
+          <div className="inline-block bg-primary text-primary-foreground px-3 py-1 rounded-full text-xs font-bold mb-4">
             LIMITED TIME
           </div>
-          <h2 className="text-4xl font-bold text-white mb-3">$50,000 Tournament</h2>
-          <p className="text-xl text-gray-200 mb-6">
+          <h2 className="text-4xl font-bold text-foreground mb-3">$50,000 Tournament</h2>
+          <p className="text-xl text-muted-foreground mb-6">
             Compete in our biggest tournament yet. Top 100 players win prizes!
           </p>
           <div className="flex items-center gap-4 mb-6">
-            <div className="glass rounded-lg px-4 py-2">
-              <div className="text-xs text-gray-400">Time Remaining</div>
-              <div className="text-2xl font-bold text-white">5d 12h 34m</div>
+            <div className="bg-muted/50 rounded-lg px-4 py-2">
+              <div className="text-xs text-muted-foreground">Time Remaining</div>
+              <div className="text-2xl font-bold text-foreground">5d 12h 34m</div>
             </div>
-            <div className="glass rounded-lg px-4 py-2">
-              <div className="text-xs text-gray-400">Prize Pool</div>
-              <div className="text-2xl font-bold text-[#FFD700]">$50,000</div>
+            <div className="bg-muted/50 rounded-lg px-4 py-2">
+              <div className="text-xs text-muted-foreground">Prize Pool</div>
+              <div className="text-2xl font-bold text-primary">$50,000</div>
             </div>
           </div>
           <button className="btn-modern px-8 py-3 rounded-xl font-bold text-lg">

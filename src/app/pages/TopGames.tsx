@@ -28,15 +28,15 @@ export default function TopGames() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-6">
       {/* Hero Section */}
-      <div className="mb-6 bg-gradient-to-r from-[#FFD700]/20 to-[#FFA500]/20 border border-[#FFD700]/30 rounded-2xl p-6 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-[#FFD700]/10 rounded-full blur-3xl" />
+      <div className="mb-6 bg-gradient-to-r from-primary/20 to-orange-500/20 border border-primary/30 rounded-2xl p-6 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-3xl" />
         <div className="relative z-10">
           <div className="flex items-center gap-2 mb-2">
-            <Crown className="w-6 h-6 text-[#FFD700]" />
-            <span className="text-[#FFD700] font-semibold text-sm uppercase">Top Games</span>
+            <Crown className="w-6 h-6 text-primary" />
+            <span className="text-primary font-semibold text-sm uppercase">Top Games</span>
           </div>
-          <h2 className="text-3xl font-bold text-white mb-2">Most Popular Games</h2>
-          <p className="text-gray-300">Play the most loved games by our community</p>
+          <h2 className="text-3xl font-bold text-foreground mb-2">Most Popular Games</h2>
+          <p className="text-muted-foreground">Play the most loved games by our community</p>
         </div>
       </div>
 
@@ -48,7 +48,7 @@ export default function TopGames() {
             return (
               <button
                 key={category.id}
-                className="px-4 py-2.5 rounded-lg bg-[#1A1A1A] hover:bg-[#FFD700] hover:text-[#121212] text-white border border-[#2A2A2A] transition-all flex items-center gap-2 whitespace-nowrap font-semibold"
+                className="px-4 py-2.5 rounded-lg bg-card hover:bg-primary hover:text-primary-foreground text-foreground border border-border transition-all flex items-center gap-2 whitespace-nowrap font-semibold"
               >
                 <Icon className="w-4 h-4" />
                 {category.label}
@@ -60,24 +60,24 @@ export default function TopGames() {
 
       {/* Stats Bar */}
       <div className="grid grid-cols-3 gap-4 mb-6">
-        <div className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-xl p-4 text-center">
-          <div className="text-2xl font-bold text-[#FFD700] mb-1">500+</div>
-          <div className="text-xs text-gray-400">Total Games</div>
+        <div className="bg-card border border-border rounded-xl p-4 text-center">
+          <div className="text-2xl font-bold text-primary mb-1">500+</div>
+          <div className="text-xs text-muted-foreground">Total Games</div>
         </div>
-        <div className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-xl p-4 text-center">
-          <div className="text-2xl font-bold text-[#FFD700] mb-1">$8.5M</div>
-          <div className="text-xs text-gray-400">Total Jackpots</div>
+        <div className="bg-card border border-border rounded-xl p-4 text-center">
+          <div className="text-2xl font-bold text-primary mb-1">$8.5M</div>
+          <div className="text-xs text-muted-foreground">Total Jackpots</div>
         </div>
-        <div className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-xl p-4 text-center">
-          <div className="text-2xl font-bold text-[#FFD700] mb-1">50K+</div>
-          <div className="text-xs text-gray-400">Players Online</div>
+        <div className="bg-card border border-border rounded-xl p-4 text-center">
+          <div className="text-2xl font-bold text-primary mb-1">50K+</div>
+          <div className="text-xs text-muted-foreground">Players Online</div>
         </div>
       </div>
 
       {/* Games Grid */}
       <div>
-        <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-          <Star className="w-6 h-6 text-[#FFD700]" />
+        <h2 className="text-xl font-bold text-foreground mb-4 flex items-center gap-2">
+          <Star className="w-6 h-6 text-primary" />
           Top Rated Games
         </h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3 mb-6">
