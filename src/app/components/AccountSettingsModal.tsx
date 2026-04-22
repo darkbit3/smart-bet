@@ -178,13 +178,13 @@ export function AccountSettingsModal({
         </div>
 
         {/* TABS */}
-        <div className="flex border-b border-[#2A2A2A]">
+        <div className="flex border-b border-border">
           <button 
             onClick={() => setActiveTab("profile")}
             className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${
               activeTab === "profile"
-                ? "text-[#FFD700] border-b-2 border-[#FFD700] bg-[#1A1A1A]"
-                : "text-gray-400 hover:text-white hover:bg-[#1A1A1A]"
+                ? "text-primary border-b-2 border-primary bg-secondary"
+                : "text-muted-foreground hover:text-foreground hover:bg-secondary"
             }`}
           >
             Profile Information
@@ -193,8 +193,8 @@ export function AccountSettingsModal({
             onClick={() => setActiveTab("password")}
             className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${
               activeTab === "password"
-                ? "text-[#FFD700] border-b-2 border-[#FFD700] bg-[#1A1A1A]"
-                : "text-gray-400 hover:text-white hover:bg-[#1A1A1A]"
+                ? "text-primary border-b-2 border-primary bg-secondary"
+                : "text-muted-foreground hover:text-foreground hover:bg-secondary"
             }`}
           >
             Change Password
@@ -205,42 +205,42 @@ export function AccountSettingsModal({
         <div className="p-6 overflow-y-auto max-h-[calc(90vh-8rem)]">
           {activeTab === "profile" && (
             <div className="space-y-4">
-              <div className="bg-[#2A2A2A] border border-[#3A3A3A] rounded-xl p-4">
-                <h3 className="text-lg font-semibold text-white mb-4">Profile Information</h3>
+              <div className="bg-muted border border-border rounded-xl p-4">
+                <h3 className="text-lg font-semibold text-foreground mb-4">Profile Information</h3>
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-400 mb-2">Username</label>
+                    <label className="block text-sm font-medium text-muted-foreground mb-2">Username</label>
                     <input
                       type="text"
                       value={newUsername}
                       onChange={(e) => setNewUsername(e.target.value)}
                       placeholder="Enter new username"
-                      className="w-full bg-[#1A1A1A] border border-[#2A2A2A] rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-[#FFD700] transition-colors"
+                      className="w-full bg-card border border-border rounded-lg px-4 py-3 text-foreground placeholder-muted-foreground/50 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 transition-colors"
                     />
                     {usernameValidation.message && (
                       <div className={`mt-2 text-sm px-3 py-2 rounded ${
                         usernameValidation.available === true 
-                          ? 'bg-green-500/20 text-green-400' 
-                          : 'bg-red-500/20 text-red-400'
+                          ? 'bg-success/20 text-success' 
+                          : 'bg-destructive/20 text-destructive'
                       }`}>
                         {usernameValidation.message}
                       </div>
                     )}
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-400 mb-2">Phone Number</label>
+                    <label className="block text-sm font-medium text-muted-foreground mb-2">Phone Number</label>
                     <input
                       type="text"
                       value={user?.phone_number || ""}
                       disabled
-                      className="w-full bg-[#1A1A1A] border border-[#2A2A2A] rounded-lg px-4 py-3 text-gray-400 cursor-not-allowed"
+                      className="w-full bg-card border border-border rounded-lg px-4 py-3 text-muted-foreground cursor-not-allowed opacity-50"
                     />
                   </div>
                 </div>
                 <button 
                   onClick={handleChangeUsername}
                   disabled={isUpdating || !usernameValidation.available}
-                  className="mt-4 w-full bg-[#FFD700] hover:bg-[#FFC700] text-[#121212] px-4 py-3 rounded-lg font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="mt-4 w-full bg-primary hover:bg-primary-dark text-primary-foreground px-4 py-3 rounded-lg font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg"
                 >
                   {isUpdating ? "Updating..." : "Save Username"}
                 </button>
@@ -250,40 +250,40 @@ export function AccountSettingsModal({
 
           {activeTab === "password" && (
             <div className="space-y-4">
-              <div className="bg-[#2A2A2A] border border-[#3A3A3A] rounded-xl p-4">
-                <h3 className="text-lg font-semibold text-white mb-4">Change Password</h3>
+              <div className="bg-muted border border-border rounded-xl p-4">
+                <h3 className="text-lg font-semibold text-foreground mb-4">Change Password</h3>
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-400 mb-2">Current Password</label>
+                    <label className="block text-sm font-medium text-muted-foreground mb-2">Current Password</label>
                     <input
                       type="password"
                       placeholder="Enter current password"
                       onChange={(e) => setCurrentPassword(e.target.value)}
-                      className="w-full bg-[#1A1A1A] border border-[#2A2A2A] rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-[#FFD700] transition-colors"
+                      className="w-full bg-card border border-border rounded-lg px-4 py-3 text-foreground placeholder-muted-foreground/50 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 transition-colors"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-400 mb-2">New Password</label>
+                    <label className="block text-sm font-medium text-muted-foreground mb-2">New Password</label>
                     <input
                       type="password"
                       placeholder="Enter new password"
                       onChange={(e) => setNewPassword(e.target.value)}
-                      className="w-full bg-[#1A1A1A] border border-[#2A2A2A] rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-[#FFD700] transition-colors"
+                      className="w-full bg-card border border-border rounded-lg px-4 py-3 text-foreground placeholder-muted-foreground/50 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 transition-colors"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-400 mb-2">Confirm New Password</label>
+                    <label className="block text-sm font-medium text-muted-foreground mb-2">Confirm New Password</label>
                     <input
                       type="password"
                       placeholder="Confirm new password"
                       onChange={(e) => setConfirmPassword(e.target.value)}
-                      className="w-full bg-[#1A1A1A] border border-[#2A2A2A] rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-[#FFD700] transition-colors"
+                      className="w-full bg-card border border-border rounded-lg px-4 py-3 text-foreground placeholder-muted-foreground/50 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 transition-colors"
                     />
                     {passwordValidation.message && (
                       <div className={`mt-2 text-sm px-3 py-2 rounded ${
                         passwordValidation.passwordsMatch 
-                          ? 'bg-green-500/20 text-green-400' 
-                          : 'bg-red-500/20 text-red-400'
+                          ? 'bg-success/20 text-success' 
+                          : 'bg-destructive/20 text-destructive'
                       }`}>
                         {passwordValidation.message}
                       </div>
@@ -293,7 +293,7 @@ export function AccountSettingsModal({
                 <button 
                   onClick={handleChangePassword}
                   disabled={isUpdating}
-                  className="mt-4 w-full bg-[#FFD700] hover:bg-[#FFC700] text-[#121212] px-4 py-3 rounded-lg font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="mt-4 w-full bg-primary hover:bg-primary-dark text-primary-foreground px-4 py-3 rounded-lg font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg"
                 >
                   {isUpdating ? "Updating..." : "Change Password"}
                 </button>
@@ -303,7 +303,7 @@ export function AccountSettingsModal({
         </div>
 
         {/* LOGOUT */}
-        <div className="p-4 border-t border-[#2A2A2A]">
+        <div className="p-4 border-t border-border">
           <button 
             onClick={logout} 
             className="w-full bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-500 px-4 py-3 rounded-lg font-semibold transition-colors"

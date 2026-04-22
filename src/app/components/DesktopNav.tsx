@@ -20,7 +20,7 @@ export function DesktopNav() {
   };
 
   return (
-    <div className="hidden md:flex horizontal-scroll items-center gap-1 bg-[#1A1A1A] rounded-lg p-1 border border-[#2A2A2A]" style={{ padding: '0.25rem' }}>
+    <div className="hidden md:flex items-center gap-1 bg-secondary rounded-lg p-1 border border-border">
       {navItems.map((item) => {
         const Icon = item.icon;
         const active = isActive(item.path);
@@ -29,10 +29,10 @@ export function DesktopNav() {
           <button
             key={item.path}
             onClick={() => navigate(item.path)}
-            className={`px-4 py-2 rounded-md transition-all flex items-center gap-2 ${
+            className={`px-4 py-2 rounded-md transition-all flex items-center gap-2 font-medium ${
               active
-                ? "bg-[#FFD700] text-[#121212] font-semibold"
-                : "text-gray-400 hover:text-white hover:bg-[#2A2A2A]"
+                ? "bg-primary text-primary-foreground"
+                : "text-muted-foreground hover:text-foreground hover:bg-muted"
             }`}
           >
             <Icon className="w-4 h-4" />

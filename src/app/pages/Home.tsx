@@ -256,12 +256,12 @@ export default function Home() {
           <Outlet context={{ onPlayGame }} />
         </div>
         {gameCheckLoading && (
-          <div className="mt-4 mx-4 p-3 bg-[#1a1a1a] border border-[#333] rounded-lg text-sm text-gray-300">
+          <div className="mt-4 mx-4 p-3 bg-secondary border border-border rounded-lg text-sm text-muted-foreground">
             Checking game availability...
           </div>
         )}
         {gameError && (
-          <div className="mt-4 mx-4 p-3 bg-[#2a1a1a] border border-red-600 rounded-lg text-sm text-red-300">
+          <div className="mt-4 mx-4 p-3 bg-destructive/10 border border-destructive/30 rounded-lg text-sm text-destructive">
             {gameError}
           </div>
         )}
@@ -269,12 +269,12 @@ export default function Home() {
 
       {selectedGame && isGameOpen && (
         <div
-          className="fixed inset-0 z-40 modal-modern flex items-center justify-center p-4 animate-slide-up"
+          className="fixed inset-0 z-40 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 animate-slide-up"
           onClick={closeGame}
         >
           <div
             ref={modalWrapperRef}
-            className="relative w-full h-full max-w-6xl max-h-[90vh] modal-content-modern overflow-hidden hover-lift"
+            className="relative w-full h-full max-w-6xl max-h-[90vh] bg-card border border-border rounded-xl overflow-hidden shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="absolute top-4 right-4 z-50 flex gap-2">
@@ -295,23 +295,23 @@ export default function Home() {
                     (el as any).msRequestFullscreen();
                   }
                 }}
-                className="bg-[#000000d0] text-white rounded-full p-2 hover:bg-[#222] transition-colors"
+                className="bg-black/60 text-foreground rounded-full p-2 hover:bg-muted transition-colors"
                 title={isFullscreenMode ? "Exit Full Screen" : "Enter Full Screen"}
               >
                 {isFullscreenMode ? <Minimize2 className="w-4 h-4" /> : <Expand className="w-4 h-4" />}
               </button>
               <button
                 onClick={closeGame}
-                className="bg-[#000000d0] text-white rounded-full p-2 hover:bg-[#222] transition-colors"
+                className="bg-black/60 text-foreground rounded-full p-2 hover:bg-muted transition-colors"
                 title="Close"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
             <div className="absolute top-0 left-0 w-full h-16 bg-gradient-to-b from-black/80 to-transparent" />
-            <div className="absolute top-4 left-4 text-white z-50">
+            <div className="absolute top-4 left-4 text-foreground z-50">
               <div className="text-lg font-bold">{selectedGame.title}</div>
-              <div className="text-sm text-gray-300">{selectedGame.provider}</div>
+              <div className="text-sm text-muted-foreground">{selectedGame.provider}</div>
             </div>
             <iframe
               ref={gameFrameRef}

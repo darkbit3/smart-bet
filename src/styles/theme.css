@@ -1,5 +1,5 @@
 /* ============================================
-   SMART BET - MODERN THEME SYSTEM
+   SMART BET - MODERN THEME SYSTEM (TAILWIND V4)
    ============================================ */
 
 @custom-variant dark (&:is(.dark *));
@@ -16,13 +16,13 @@
   --popover: #121212;
   --popover-foreground: #FFFFFF;
   
-  /* Primary Gold Theme */
+  /* Primary Gold Theme - Professional Betting App */
   --primary: #FFD700;
   --primary-foreground: #000000;
   --primary-dark: #FFC700;
   --primary-light: #FFED4E;
   
-  /* Surface Colors */
+  /* Surface Colors - Hierarchy & Depth */
   --secondary: #1E1E1E;
   --secondary-foreground: #FFFFFF;
   --muted: #252525;
@@ -30,7 +30,7 @@
   --accent: #FFD700;
   --accent-foreground: #000000;
   
-  /* Status Colors */
+  /* Status Colors - Clear Communication */
   --destructive: #EF4444;
   --destructive-foreground: #FFFFFF;
   --success: #10B981;

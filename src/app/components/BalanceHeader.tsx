@@ -72,37 +72,37 @@ export function BalanceHeader({ onSignOut, onLogin, onRegister, onDeposit, onAcc
   });
 
   const BalanceDetails = () => (
-    <>
-      <div className="flex items-center justify-between">
+    <div className="space-y-3">
+      <div className="flex items-center justify-between p-2 rounded-lg hover:bg-black/30 transition-colors">
         <div>
-          <div className="text-xs text-gray-400">Main Balance</div>
-          <div className="text-sm font-semibold text-white">${balances.balance.toFixed(2)}</div>
+          <div className="text-xs text-muted-foreground">Main Balance</div>
+          <div className="text-sm font-semibold text-foreground">${balances.balance.toFixed(2)}</div>
         </div>
-        <div className="w-2 h-2 rounded-full bg-blue-500" />
+        <div className="w-2 h-2 rounded-full bg-info" />
       </div>
-      <div className="h-px bg-[#2A2A2A]" />
-      <div className="flex items-center justify-between">
+      <div className="border-t border-border" />
+      <div className="flex items-center justify-between p-2 rounded-lg hover:bg-black/30 transition-colors">
         <div>
-          <div className="text-xs text-gray-400">Non-Withdrawable</div>
-          <div className="text-sm font-semibold text-white">${balances.non_withdrawable.toFixed(2)}</div>
+          <div className="text-xs text-muted-foreground">Non-Withdrawable</div>
+          <div className="text-sm font-semibold text-foreground">${balances.non_withdrawable.toFixed(2)}</div>
         </div>
-        <div className="w-2 h-2 rounded-full bg-green-500" />
+        <div className="w-2 h-2 rounded-full bg-success" />
       </div>
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between p-2 rounded-lg hover:bg-black/30 transition-colors">
         <div>
-          <div className="text-xs text-gray-400">Bonus Balance</div>
-          <div className="text-sm font-semibold text-[#FFD700]">${balances.bonus_balance.toFixed(2)}</div>
+          <div className="text-xs text-muted-foreground">Bonus Balance</div>
+          <div className="text-sm font-semibold text-primary">${balances.bonus_balance.toFixed(2)}</div>
         </div>
-        <div className="w-2 h-2 rounded-full bg-[#FFD700]" />
+        <div className="w-2 h-2 rounded-full bg-primary" />
       </div>
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between p-2 rounded-lg hover:bg-black/30 transition-colors">
         <div>
-          <div className="text-xs text-gray-400">Withdrawable</div>
-          <div className="text-sm font-semibold text-green-400">${balances.withdrawable.toFixed(2)}</div>
+          <div className="text-xs text-muted-foreground">Withdrawable</div>
+          <div className="text-sm font-semibold text-success">${balances.withdrawable.toFixed(2)}</div>
         </div>
-        <div className="w-2 h-2 rounded-full bg-green-400" />
+        <div className="w-2 h-2 rounded-full bg-success" />
       </div>
-    </>
+    </div>
   );
 
   const handleSignOut = () => {
@@ -140,21 +140,21 @@ export function BalanceHeader({ onSignOut, onLogin, onRegister, onDeposit, onAcc
 
   return (
     <>
-    <div className="glass-dark border-b border-border/20 px-4 py-3 backdrop-blur-xl">
-        <div className="responsive-container flex items-center justify-between">
+    <div className="bg-card border-b border-border backdrop-blur-md px-4 py-3">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
           {/* Logo */}
-          <div
-            className="flex items-center gap-2 cursor-pointer"
+          <button
+            className="flex items-center gap-2 hover:opacity-80 transition-opacity"
             onClick={() => {
               navigate("/home/casino");
               window.location.reload();
             }}
           >
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#FFD700] to-[#FFA500] flex items-center justify-center">
-              <span className="text-[#121212] font-bold text-xl">S</span>
+            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-orange-500 flex items-center justify-center">
+              <span className="text-primary-foreground font-bold text-xl">S</span>
             </div>
-            <span className="text-[#FFD700] font-bold text-xl hidden sm:block">Smart Bet</span>
-          </div>
+            <span className="text-primary font-bold text-xl hidden sm:block">Smart Bet</span>
+          </button>
 
           {isAuthenticated ? (
             <div className="flex items-center gap-3">
@@ -280,7 +280,7 @@ export function BalanceHeader({ onSignOut, onLogin, onRegister, onDeposit, onAcc
 
               <button
                 onClick={() => onDeposit?.()}
-                className="bg-[#FFD700] hover:bg-[#FFC700] text-[#121212] px-4 py-2 rounded-lg font-semibold flex items-center gap-2 transition-colors"
+                className="bg-primary hover:bg-primary-dark text-primary-foreground px-4 py-2 rounded-lg font-semibold flex items-center gap-2 transition-colors shadow-md hover:shadow-lg"
               >
                 <Plus className="w-4 h-4" />
                 <span className="hidden sm:inline">Deposit</span>
@@ -379,13 +379,13 @@ export function BalanceHeader({ onSignOut, onLogin, onRegister, onDeposit, onAcc
             <div className="flex items-center gap-2">
               <button
                 onClick={() => onLogin?.()}
-                className="border border-[#FFD700] text-[#FFD700] px-4 py-2 rounded-lg hover:bg-[#FFD700] hover:text-[#121212] transition-colors"
+                className="border-2 border-primary text-primary px-4 py-2 rounded-lg hover:bg-primary hover:text-primary-foreground transition-colors font-semibold"
               >
                 Login
               </button>
               <button
                 onClick={() => onRegister?.()}
-                className="bg-[#FFD700] text-[#121212] px-4 py-2 rounded-lg hover:bg-[#FFC700] transition-colors"
+                className="bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors font-semibold shadow-md hover:shadow-lg"
               >
                 Register
               </button>
@@ -395,7 +395,7 @@ export function BalanceHeader({ onSignOut, onLogin, onRegister, onDeposit, onAcc
       </div>
 
       {/* Desktop Navigation */}
-      <div className="glass-dark border-b border-[#2A2A2A] px-4 py-3">
+      <div className="bg-card border-b border-border px-4 py-3">
         <div className="max-w-7xl mx-auto flex items-center justify-center">
           <DesktopNav />
         </div>

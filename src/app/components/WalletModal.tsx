@@ -113,35 +113,35 @@ export function WalletModal({ isOpen, onClose, phoneNumber }: WalletModalProps) 
           className="modal-modern w-full max-w-5xl overflow-hidden max-h-[90vh] overflow-y-auto pointer-events-auto"
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="flex items-center justify-between p-4 border-b border-[#2A2A2A]">
-            <h2 className="text-xl font-bold text-white">Wallet</h2>
-            <button onClick={onClose} className="text-gray-400 hover:text-white transition-colors">
+          <div className="flex items-center justify-between p-4 border-b border-border">
+            <h2 className="text-xl font-bold text-foreground">Wallet</h2>
+            <button onClick={onClose} className="text-muted-foreground hover:text-foreground transition-colors">
               <X className="w-5 h-5" />
             </button>
           </div>
 
           {/* Balance Summary */}
-          <div className="p-4 bg-[#1A1A1A] border-b border-[#2A2A2A]">
+          <div className="p-4 bg-secondary border-b border-border">
             {isLoadingBalance ? (
               <div className="flex justify-center py-4">
-                <div className="w-6 h-6 border-2 border-[#FFD700] border-t-transparent animate-spin rounded-full"></div>
+                <div className="w-6 h-6 border-2 border-primary border-t-transparent animate-spin rounded-full"></div>
               </div>
             ) : (
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <div className="text-xs text-gray-400">Total Balance</div>
-                  <div className="text-lg font-semibold text-white">${balanceManagement.displayBalance.toFixed(2)}</div>
+                  <div className="text-xs text-muted-foreground">Total Balance</div>
+                  <div className="text-lg font-semibold text-foreground">${balanceManagement.displayBalance.toFixed(2)}</div>
                 </div>
                 <div>
-                  <div className="text-xs text-gray-400">Bonus Balance</div>
-                  <div className="text-lg font-semibold text-[#FFD700]">${userBalance.bonus_balance.toFixed(2)}</div>
+                  <div className="text-xs text-muted-foreground">Bonus Balance</div>
+                  <div className="text-lg font-semibold text-primary">${userBalance.bonus_balance.toFixed(2)}</div>
                 </div>
               </div>
             )}
           </div>
 
           {/* Bingo Game Section */}
-          <div className="p-4 bg-gradient-to-r from-[#FFD700]/10 to-[#FFA500]/10 border-b border-[#2A2A2A]">
+          <div className="p-4 bg-gradient-to-r from-primary/10 to-orange-500/10 border-b border-border">
             <div className="flex items-center gap-4">
               <div className="relative w-20 h-20 rounded-lg overflow-hidden flex-shrink-0">
                 <img
@@ -150,12 +150,12 @@ export function WalletModal({ isOpen, onClose, phoneNumber }: WalletModalProps) 
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                  <span className="text-white text-xs font-bold">BINGO</span>
+                  <span className="text-foreground text-xs font-bold">BINGO</span>
                 </div>
               </div>
               <div className="flex-1">
-                <h3 className="text-lg font-bold text-white mb-1">Play Bingo Now!</h3>
-                <p className="text-sm text-gray-400 mb-3">Experience the excitement of Bingo with Smart Bet Gaming</p>
+                <h3 className="text-lg font-bold text-foreground mb-1">Play Bingo Now!</h3>
+                <p className="text-sm text-muted-foreground mb-3">Experience the excitement of Bingo with Smart Bet Gaming</p>
                 <button
                   onClick={() => {
                     // Show confirmation panel before navigating
@@ -179,7 +179,7 @@ export function WalletModal({ isOpen, onClose, phoneNumber }: WalletModalProps) 
                       window.location.href = 'http://localhost:5173';
                     }
                   }}
-                  className="bg-[#FFD700] hover:bg-[#FFC700] text-[#121212] px-4 py-2 rounded-lg font-semibold text-sm transition-colors flex items-center gap-2"
+                  className="bg-primary hover:bg-primary-dark text-primary-foreground px-4 py-2 rounded-lg font-semibold text-sm transition-colors flex items-center gap-2 shadow-md hover:shadow-lg"
                 >
                   Play Now
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -191,7 +191,7 @@ export function WalletModal({ isOpen, onClose, phoneNumber }: WalletModalProps) 
           </div>
 
           {/* Tabs */}
-          <div className="flex border-b border-[#2A2A2A]">
+          <div className="flex border-b border-border">
             {tabs.map((tab) => {
               const Icon = tab.icon;
               return (
@@ -200,8 +200,8 @@ export function WalletModal({ isOpen, onClose, phoneNumber }: WalletModalProps) 
                   onClick={() => setActiveTab(tab.id)}
                   className={`flex-1 px-4 py-3 text-sm font-medium flex items-center justify-center gap-2 transition-colors ${
                     activeTab === tab.id
-                      ? "bg-[#FFD700] text-[#121212]"
-                      : "text-gray-400 hover:text-white hover:bg-[#1A1A1A]"
+                      ? "bg-primary text-primary-foreground"
+                      : "text-muted-foreground hover:text-foreground hover:bg-secondary"
                   }`}
                 >
                   <Icon className="w-4 h-4" />
