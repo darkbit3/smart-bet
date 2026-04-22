@@ -8,6 +8,9 @@ import { BalanceProvider } from "../contexts/BalanceContext";
 import { ToastProvider } from "../components/ToastContainer";
 import { io } from 'socket.io-client';
 import Login from "./pages/Login";
+import "../styles/globals.css";
+import "../styles/main.css";
+import "../styles/theme.css";
 
 export default function App() {
   const [showLoginModal, setShowLoginModal] = useState(false);
