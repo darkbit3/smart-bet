@@ -190,25 +190,25 @@ export default function Auth() {
   if (isAuthenticated && user) {
     return (
       <div className="max-w-md mx-auto px-4 py-8">
-        <div className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-xl p-6">
+        <div className="bg-card border border-border rounded-xl p-6">
           <div className="text-center mb-6">
-            <div className="w-16 h-16 bg-[#FFD700]/20 rounded-full flex items-center justify-center mx-auto mb-4">
-              <User className="w-8 h-8 text-[#FFD700]" />
+            <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
+              <User className="w-8 h-8 text-primary" />
             </div>
-            <h2 className="text-2xl font-bold text-white mb-2">Welcome back!</h2>
-            <p className="text-gray-400">{user.username}</p>
+            <h2 className="text-2xl font-bold text-foreground mb-2">Welcome back!</h2>
+            <p className="text-muted-foreground">{user.username}</p>
           </div>
 
           <div className="space-y-4 mb-6">
             <div className="flex justify-between text-sm">
-              <span className="text-gray-400">Balance:</span>
-              <span className="text-[#FFD700] font-bold">${(user.non_withdrawable + user.withdrawable + user.bonus_balance).toFixed(2)}</span>
+              <span className="text-muted-foreground">Balance:</span>
+              <span className="text-primary font-bold">${(user.non_withdrawable + user.withdrawable + user.bonus_balance).toFixed(2)}</span>
             </div>
           </div>
 
           <button
             onClick={() => window.location.href = '/dashboard'}
-            className="w-full bg-[#FFD700] hover:bg-[#FFC700] text-[#121212] font-semibold py-3 rounded-lg transition-colors"
+            className="w-full bg-primary hover:bg-primary-dark text-primary-foreground font-semibold py-3 rounded-lg transition-colors shadow-md hover:shadow-lg"
           >
             Go to Dashboard
           </button>
@@ -219,7 +219,7 @@ export default function Auth() {
 
   return (
     <div className="max-w-md mx-auto px-4 py-8">
-      <div className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-xl p-6">
+      <div className="bg-card border border-border rounded-xl p-6">
         <div className="text-center mb-6">
           <h2 className="text-2xl font-bold text-white mb-2">
             {isLogin ? "Login" : "Register"}
@@ -269,14 +269,14 @@ export default function Auth() {
                 value={formData.username}
                 onChange={handleInputChange}
                 required
-                className={`w-full bg-[#2A2A2A] border rounded-lg pl-10 pr-4 py-3 text-white placeholder-gray-500 focus:outline-none transition-all duration-300 ${
+                className={`w-full bg-muted border rounded-lg pl-10 pr-4 py-3 text-foreground placeholder-muted-foreground/50 focus:outline-none transition-all duration-300 ${
                   fieldErrors.username 
-                    ? 'border-red-500 animate-pulse bg-red-500/10' 
+                    ? 'border-destructive animate-pulse bg-destructive/10' 
                     : !isLogin && (usernameStatus === 'taken' || usernameStatus === 'too_short' || usernameStatus === 'invalid')
-                    ? 'border-red-500'
+                    ? 'border-destructive'
                     : !isLogin && usernameStatus === 'available'
-                    ? 'border-green-500'
-                    : 'border-[#3A3A3A] focus:border-[#FFD700]'
+                    ? 'border-success'
+                    : 'border-border focus:border-primary focus:ring-1 focus:ring-primary/50'
                 }`}
                 placeholder="Enter username"
               />
@@ -292,20 +292,20 @@ export default function Auth() {
               Password
             </label>
             <div className="relative">
-              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
               <input
                 type={showPassword ? "text" : "password"}
                 name="password"
                 value={formData.password}
                 onChange={handleInputChange}
                 required
-                className="w-full bg-[#2A2A2A] border border-[#3A3A3A] rounded-lg pl-10 pr-12 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-[#FFD700] transition-colors"
+                className="w-full bg-muted border border-border rounded-lg pl-10 pr-12 py-3 text-foreground placeholder-muted-foreground/50 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 transition-colors"
                 placeholder="Enter password"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
               >
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
@@ -315,43 +315,43 @@ export default function Auth() {
           {!isLogin && (
             <>
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-muted-foreground mb-2">
                   Confirm Password
                 </label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
                   <input
                     type={showPassword ? "text" : "password"}
                     name="confirm_password"
                     value={formData.confirm_password}
                     onChange={handleInputChange}
                     required
-                    className="w-full bg-[#2A2A2A] border border-[#3A3A3A] rounded-lg pl-10 pr-12 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-[#FFD700] transition-colors"
+                    className="w-full bg-muted border border-border rounded-lg pl-10 pr-12 py-3 text-foreground placeholder-muted-foreground/50 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 transition-colors"
                     placeholder="Confirm password"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-muted-foreground mb-2">
                   Phone Number
                 </label>
                 <div className="relative">
-                  <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                  <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
                   <input
                     type="tel"
                     name="phone_number"
                     value={formData.phone_number}
                     onChange={handleInputChange}
                     required
-                    className={`w-full bg-[#2A2A2A] border rounded-lg pl-10 pr-4 py-3 text-white placeholder-gray-500 focus:outline-none transition-all duration-300 ${
+                    className={`w-full bg-muted border rounded-lg pl-10 pr-4 py-3 text-foreground placeholder-muted-foreground/50 focus:outline-none transition-all duration-300 ${
                       fieldErrors.phone_number 
-                        ? 'border-red-500 animate-pulse bg-red-500/10' 
+                        ? 'border-destructive animate-pulse bg-destructive/10' 
                         : phoneStatus === 'taken' || phoneStatus === 'invalid'
-                        ? 'border-red-500'
+                        ? 'border-destructive'
                         : phoneStatus === 'available'
-                        ? 'border-green-500'
-                        : 'border-[#3A3A3A] focus:border-[#FFD700]'
+                        ? 'border-success'
+                        : 'border-border focus:border-primary focus:ring-1 focus:ring-primary/50'
                     }`}
                     placeholder="Phone number"
                   />
@@ -384,11 +384,11 @@ export default function Auth() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-[#FFD700] hover:bg-[#FFC700] disabled:bg-gray-600 text-[#121212] font-semibold py-3 rounded-lg transition-colors flex items-center justify-center gap-2"
+            className="w-full bg-primary hover:bg-primary-dark disabled:opacity-50 text-primary-foreground font-semibold py-3 rounded-lg transition-colors flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
           >
             {isLoading ? (
               <>
-                <div className="w-4 h-4 border-2 border-[#121212] border-t-transparent rounded-full animate-spin" />
+                <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
                 Processing...
               </>
             ) : (
@@ -398,7 +398,7 @@ export default function Auth() {
         </form>
 
         <div className="mt-6 text-center">
-          <p className="text-gray-400">
+          <p className="text-muted-foreground">
             {isLogin ? "Don't have an account?" : "Already have an account?"}
             <button
               type="button"
@@ -413,7 +413,7 @@ export default function Auth() {
                   referral_code: "",
                 });
               }}
-              className="ml-2 text-[#FFD700] hover:text-[#FFC700] font-semibold transition-colors"
+              className="ml-2 text-primary hover:text-primary-dark font-semibold transition-colors"
             >
               {isLogin ? "Register" : "Login"}
             </button>
